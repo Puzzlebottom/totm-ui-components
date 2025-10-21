@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "components-dev-testing",
-    "slug": "components-dev-testing",
+    "name": "totm-ui-components",
+    "slug": "totm-ui-components",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "componentsdevtesting",
+    "scheme": "totm-ui-components",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

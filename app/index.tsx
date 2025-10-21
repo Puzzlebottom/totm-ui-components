@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import StorybookUIRoot from "@/.rnstorybook";
 import { View } from "react-native";
 
 export default function Index() {
@@ -10,7 +10,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Link href="/storybook">Open Storybook</Link>
+      <StorybookUIRoot />
     </View>
   );
 }

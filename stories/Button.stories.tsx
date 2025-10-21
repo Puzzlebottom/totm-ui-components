@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { View } from 'react-native';
 import { fn } from 'storybook/test';
 
-import { Button } from './Button';
+import { Button } from '@components';
 
 const meta = {
   title: 'Example/Button',
@@ -17,7 +17,7 @@ const meta = {
   ],
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
   args: { onPress: fn() },
 } satisfies Meta<typeof Button>;
 
