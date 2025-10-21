@@ -1,70 +1,69 @@
-import { useState } from 'react';
+import { useState } from "react"
 
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from "react-native"
 
-import { Header } from './Header';
+import { Header } from "./Header"
 
 export const Page = () => {
-  const [user, setUser] = useState<{ name: string } | undefined>();
+  const [user, setUser] = useState<{ name: string } | undefined>()
 
   return (
     <View>
       <Header
         user={user}
-        onLogin={() => setUser({ name: 'Jane Doe' })}
+        onLogin={() => setUser({ name: "Jane Doe" })}
         onLogout={() => setUser(undefined)}
-        onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+        onCreateAccount={() => setUser({ name: "Jane Doe" })}
       />
-
       <View style={styles.section}>
         <Text role="heading" style={styles.h2}>
           Pages in Storybook
         </Text>
         <Text style={styles.p}>
-          We recommend building UIs with a{' '}
+          We recommend building UIs with a{" "}
           <Text
-            style={[styles.a, { fontWeight: 'bold' }]}
+            style={[styles.a, { fontWeight: "bold" }]}
             role="link"
             onPress={() => {
-              Linking.openURL('https://componentdriven.org');
+              void Linking.openURL("https://componentdriven.org")
             }}
           >
             <Text>component-driven</Text>
-          </Text>{' '}
+          </Text>{" "}
           process starting with atomic components and ending with pages.
         </Text>
         <Text style={styles.p}>
-          Render pages with mock data. This makes it easy to build and review page states without
-          needing to navigate to them in your app. Here are some handy patterns for managing page
-          data in Storybook:
+          Render pages with mock data. This makes it easy to build and review
+          page states without needing to navigate to them in your app. Here are
+          some handy patterns for managing page data in Storybook:
         </Text>
         <View>
           <Text>
-            Use a higher-level connected component. Storybook helps you compose such data from the
-            "args" of child component stories
+            Use a higher-level connected component. Storybook helps you compose
+            such data from the "args" of child component stories
           </Text>
           <Text>
-            Assemble data in the page component from your services. You can mock these services out
-            using Storybook.
+            Assemble data in the page component from your services. You can mock
+            these services out using Storybook.
           </Text>
         </View>
         <Text style={styles.p}>
-          Get a guided tutorial on component-driven development at{' '}
+          Get a guided tutorial on component-driven development at{" "}
           <Text
             style={styles.a}
             role="link"
             onPress={() => {
-              Linking.openURL('https://storybook.js.org/tutorials/');
+              void Linking.openURL("https://storybook.js.org/tutorials/")
             }}
           >
             Storybook tutorials
           </Text>
-          . Read more in the{' '}
+          . Read more in the{" "}
           <Text
             style={styles.a}
             role="link"
             onPress={() => {
-              Linking.openURL('https://storybook.js.org/docs');
+              void Linking.openURL("https://storybook.js.org/docs")
             }}
           >
             docs
@@ -73,8 +72,8 @@ export const Page = () => {
         </Text>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   section: {
@@ -83,13 +82,13 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     paddingVertical: 48,
     paddingHorizontal: 20,
-    marginHorizontal: 'auto',
+    marginHorizontal: "auto",
     maxWidth: 600,
-    color: '#333',
+    color: "#333",
   },
 
   h2: {
-    fontWeight: '900',
+    fontWeight: "900",
     fontSize: 32,
     lineHeight: 1,
     marginBottom: 4,
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
   },
 
   a: {
-    color: '#1ea7fd',
+    color: "#1ea7fd",
   },
 
   ul: {
@@ -114,9 +113,9 @@ const styles = StyleSheet.create({
   },
 
   tip: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderRadius: 16,
-    backgroundColor: '#e7fdd8',
+    backgroundColor: "#e7fdd8",
     paddingVertical: 4,
     paddingHorizontal: 12,
     marginRight: 10,
@@ -125,8 +124,8 @@ const styles = StyleSheet.create({
   tipText: {
     fontSize: 11,
     lineHeight: 12,
-    fontWeight: '700',
-    color: '#66bf3c',
+    fontWeight: "700",
+    color: "#66bf3c",
   },
 
   tipWrapper: {
@@ -134,8 +133,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginTop: 40,
     marginBottom: 40,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
 
   tipWrapperSvg: {
@@ -144,4 +143,4 @@ const styles = StyleSheet.create({
     marginRight: 4,
     marginTop: 3,
   },
-});
+})

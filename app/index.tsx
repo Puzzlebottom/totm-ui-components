@@ -1,5 +1,5 @@
-import StorybookUIRoot from "@/.rnstorybook";
-import { View } from "react-native";
+import StorybookUIRoot from "@/.rnstorybook"
+import { View } from "react-native"
 
 export default function Index() {
   return (
@@ -12,5 +12,5 @@ export default function Index() {
     >
       <StorybookUIRoot />
     </View>
-  );
+  )
 }

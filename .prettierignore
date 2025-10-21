@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.expo/
+.rnstorybook/
+*.log
+coverage/
+build/
+.next/
+out/
