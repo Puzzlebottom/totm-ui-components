@@ -1,0 +1,5 @@
+.turbo
+node_modules
+.yarn
+.env
+expo-env.d.ts

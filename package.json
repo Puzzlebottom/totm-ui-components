@@ -1,0 +1,30 @@
+{
+  "name": "totm-ui-components",
+  "version": "1.0.0",
+  "author": "CMeldrum",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "workspaces": [
+    "dev/*",
+    "src/*"
+  ],
+  "packageManager": "yarn@1.22.22",
+  "devDependencies": {
+    "clsx": "^2.1.1",
+    "prettier": "^3.3.2",
+    "tailwind-merge": "^2.5.2",
+    "turbo": "^2.5.8"
+  },
+  "resolutions": {
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-web": "~0.21.1",
+    "tailwindcss": "^4.1.15"
+  }
+}

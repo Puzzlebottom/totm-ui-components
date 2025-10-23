@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": "./src",
+    "paths": {
+      "components/*": [
+        "./src/components/*"
+      ],
+      "dev/*": [
+        "./dev/*"
+      ]
+    },
+    "jsx": "react-jsx"
+  },
+  "exclude": [
+    "node_modules",
+    "packages/*/node_modules",
+    "packages/*/dist"
+  ],
+  "extends": "expo/tsconfig.base"
+}
