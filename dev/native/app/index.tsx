@@ -1,5 +1,7 @@
 import { Text } from "react-native";
 import { View } from "components/view";
+import StorybookUIRoot from "../.rnstorybook"
+
 
 export default function Index() {
   return (
@@ -10,7 +12,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <StorybookUIRoot />
     </View>
   );
 }

@@ -1,5 +1,7 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require("expo/metro-config")
+const withStorybook = require("@storybook/react-native/metro/withStorybook")
+
 const path = require("path")
 
 const workspaceRoot = path.resolve(__dirname, "../..")
@@ -15,4 +17,4 @@ config.resolver.nodeModulesPaths = [
 
 config.resolver.disableHierarchicalLookup = true
 
-module.exports = config
+module.exports = withStorybook(config)
