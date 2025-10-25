@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Button } from './Button';
+import { Button } from '../button';
 
 export type HeaderProps = {
   user?: { name: string };

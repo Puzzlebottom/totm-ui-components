@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Linking, StyleSheet, Text, View } from 'react-native';
 
-import { Header } from './Header';
+import { Header } from '../header';
 
 export const Page = () => {
   const [user, setUser] = useState<{ name: string } | undefined>();

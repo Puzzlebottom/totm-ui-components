@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Header } from './Header';
+import { Header } from 'components';
 
 const meta = {
   title: 'Example/Header',
@@ -18,16 +18,16 @@ export const LoggedIn: Story = {
     user: {
       name: 'Jane Doe',
     },
-    onLogin: () => {},
-    onLogout: () => {},
-    onCreateAccount: () => {},
+    onLogin: () => { },
+    onLogout: () => { },
+    onCreateAccount: () => { },
   },
 };
 
 export const LoggedOut: Story = {
   args: {
-    onLogin: () => {},
-    onLogout: () => {},
-    onCreateAccount: () => {},
+    onLogin: () => { },
+    onLogout: () => { },
+    onCreateAccount: () => { },
   },
 };

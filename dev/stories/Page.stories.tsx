@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { Page } from './Page';
+import { Page } from 'components';
 
 export default {
   title: 'Example/Page',
