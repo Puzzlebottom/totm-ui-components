@@ -1,101 +1,139 @@
-import type { StyleProp, ViewStyle } from 'react-native';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { getSize, getSpace } from '@tamagui/get-token'
+import {
+  GetProps,
+  SizeTokens,
+  View,
+  Text,
+  createStyledContext,
+  styled,
+  useTheme,
+  withStaticProperties,
+} from 'tamagui'
+import { cloneElement, isValidElement, useContext } from 'react'
 
-export interface ButtonProps {
-  /** Is this the principal call to action on the page? */
-  primary?: boolean;
-  /** What background color to use */
-  backgroundColor?: string;
-  /** How large should the button be? */
-  size?: 'small' | 'medium' | 'large';
-  /** Button contents */
-  label: string;
-  /** Optional click handler */
-  onPress?: () => void;
-  style?: StyleProp<ViewStyle>;
+export const ButtonContext = createStyledContext({
+  size: '$4' as SizeTokens,
+  variant: 'primary' as 'primary' | 'secondary' | 'outline',
+})
+
+export const ButtonFrame = styled(View, {
+  name: 'Button',
+  context: ButtonContext,
+  bg: '$background',
+  justify: 'center',
+  items: 'center',
+  flexDirection: 'row',
+
+  hoverStyle: {
+    bg: '$backgroundHover',
+  },
+
+  pressStyle: {
+    bg: '$backgroundPress',
+  },
+
+  variants: {
+    size: {
+      '...size': (name: any, { tokens }: any) => {
+        return {
+          height: tokens.size[name],
+          borderRadius: tokens.radius[name],
+          gap: tokens.space[name].val * 0.2,
+          px: getSpace(name, {
+            shift: -1,
+          }),
+        }
+      },
+    },
+
+    variant: {
+      primary: {
+        bg: '$blue10',
+        hoverStyle: {
+          bg: '$blue9',
+        },
+        pressStyle: {
+          bg: '$blue11',
+        },
+      },
+      secondary: {
+        bg: 'transparent',
+        borderWidth: 1,
+        borderColor: '$borderColor',
+        hoverStyle: {
+          bg: '$backgroundHover',
+        },
+        pressStyle: {
+          bg: '$backgroundPress',
+        },
+      },
+      outline: {
+        bg: 'transparent',
+        borderWidth: 1,
+        borderColor: '$blue10',
+        hoverStyle: {
+          bg: '$blue2',
+        },
+        pressStyle: {
+          bg: '$blue3',
+        },
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    size: '$4',
+    variant: 'primary',
+  },
+} as const)
+
+export type ButtonProps = GetProps<typeof ButtonFrame>
+
+export const ButtonText = styled(Text, {
+  name: 'ButtonText',
+  context: ButtonContext,
+  color: '$color',
+  fontFamily: '$body',
+  fontWeight: '700',
+
+  variants: {
+    size: {
+      '...fontSize': (name, { font }) => ({
+        fontSize: font?.size[name],
+      }),
+    },
+
+    variant: {
+      primary: {
+        color: 'white',
+      },
+      secondary: {
+        color: '$color',
+      },
+      outline: {
+        color: '$blue10',
+      },
+    },
+  } as const,
+})
+
+const ButtonIcon = (props: { children: React.ReactNode }) => {
+  const { size } = useContext(ButtonContext.context)
+  const smaller = getSize(size, {
+    shift: -2,
+  })
+  const theme = useTheme()
+
+  return isValidElement(props.children)
+    ? cloneElement(props.children, {
+      size: smaller.val * 0.5,
+      color: theme.color.get(),
+    } as any)
+    : null
 }
 
-/** Primary UI component for user interaction */
-export const Button = ({
-  primary = false,
-  size = 'medium',
-  backgroundColor,
-  label,
-  style,
-  onPress,
-}: ButtonProps) => {
-  const modeStyle = primary ? styles.primary : styles.secondary;
-  const textModeStyle = primary ? styles.primaryText : styles.secondaryText;
-
-  const sizeStyle = styles[size];
-  const textSizeStyle = textSizeStyles[size];
-
-  return (
-    <TouchableOpacity accessibilityRole="button" activeOpacity={0.6} onPress={onPress}>
-      <View
-        style={[
-          styles.button,
-          modeStyle,
-          sizeStyle,
-          style,
-          !!backgroundColor && { backgroundColor },
-          { borderColor: 'black' },
-        ]}
-      >
-        <Text style={[textModeStyle, textSizeStyle]}>{label}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const styles = StyleSheet.create({
-  button: {
-    borderWidth: 0,
-    borderRadius: 48,
-  },
-  buttonText: {
-    fontWeight: '700',
-    lineHeight: 1,
-  },
-  primary: {
-    backgroundColor: '#1ea7fd',
-  },
-  primaryText: {
-    color: 'white',
-  },
-  secondary: {
-    backgroundColor: 'transparent',
-    borderColor: 'rgba(0, 0, 0, 0.15)',
-    borderWidth: 1,
-  },
-  secondaryText: {
-    color: '#333',
-  },
-  small: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-  },
-  smallText: {
-    fontSize: 12,
-  },
-  medium: {
-    paddingVertical: 11,
-    paddingHorizontal: 20,
-  },
-  mediumText: {
-    fontSize: 14,
-  },
-  large: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  largeText: {
-    fontSize: 16,
-  },
-});
-
-const textSizeStyles = {
-  small: styles.smallText,
-  medium: styles.mediumText,
-  large: styles.largeText,
-};
+export const Button = withStaticProperties(ButtonFrame, {
+  Props: ButtonContext.Provider,
+  Text: ButtonText,
+  Icon: ButtonIcon,
+})

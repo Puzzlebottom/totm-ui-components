@@ -17,4 +17,17 @@ config.resolver.nodeModulesPaths = [
 
 config.resolver.disableHierarchicalLookup = true
 
+// Resolve totm-ui-components from source files for hot reload
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === 'totm-ui-components') {
+    return {
+      filePath: path.resolve(workspaceRoot, 'src/index.ts'),
+      type: 'sourceFile',
+    }
+  }
+
+  // Fall back to default resolver
+  return context.resolveRequest(context, moduleName, platform)
+}
+
 module.exports = withStorybook(config)

@@ -1,4 +1,6 @@
+import { UIProvider } from 'totm-ui-components';
 import type { Preview } from '@storybook/react';
+import { View } from 'react-native';
 
 const preview: Preview = {
   parameters: {
@@ -9,6 +11,15 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <UIProvider defaultTheme="light">
+        <View style={{ flex: 1, alignItems: 'flex-start' }} >
+          <Story />
+        </View>
+      </UIProvider>
+    ),
+  ],
 };
 
 export default preview;

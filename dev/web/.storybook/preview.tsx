@@ -1,5 +1,6 @@
-import { View } from 'components/view';
-import type { Preview } from '@storybook/nextjs-vite'
+import { UIProvider } from 'totm-ui-components';
+import { View } from 'react-native';
+import type { Preview } from '@storybook/react-native-web-vite';
 
 const preview: Preview = {
   parameters: {
@@ -19,9 +20,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <View style={{ flex: 1, alignItems: 'flex-start' }} >
-        <Story />
-      </View>
+      <UIProvider defaultTheme="light">
+        <View style={{ flex: 1, alignItems: 'flex-start' }}>
+          <Story />
+        </View>
+      </UIProvider>
     ),
   ],
 };

@@ -3,3 +3,4 @@ node_modules
 .yarn
 .env
 expo-env.d.ts
+src/dist

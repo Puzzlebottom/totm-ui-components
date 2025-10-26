@@ -1,5 +1,4 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import Image from "next/image";
 
 import Github from "./assets/github.svg";
 import Discord from "./assets/discord.svg";
@@ -42,11 +41,9 @@ export const RightArrow = () => <svg
   </div>
   <div className="sb-section">
     <div className="sb-section-item">
-      <Image
+      <img
         src={Styling}
         alt="A wall of logos representing different styling technologies"
-        width={0}
-        height={0}
         style={{ width: '100%', height: 'auto' }}
       />
       <h4 className="sb-section-item-heading">Add styling and CSS</h4>
@@ -57,9 +54,7 @@ export const RightArrow = () => <svg
       >Learn more<RightArrow /></a>
     </div>
     <div className="sb-section-item">
-      <Image 
-        width={0}
-        height={0}
+      <img 
         style={{ width: '100%', height: 'auto' }}
         src={Context}
         alt="An abstraction representing the composition of data for a component"
@@ -72,9 +67,7 @@ export const RightArrow = () => <svg
       >Learn more<RightArrow /></a>
     </div>
     <div className="sb-section-item">
-      <Image 
-        width={0}
-        height={0}
+      <img 
         style={{ width: '100%', height: 'auto' }} 
         src={Assets} 
         alt="A representation of typography and image assets" 
@@ -102,9 +95,7 @@ export const RightArrow = () => <svg
   <div className="sb-section">
     <div className="sb-features-grid">
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={Docs} 
           alt="A screenshot showing the autodocs tag being set, pointing a docs page being generated" 
@@ -118,9 +109,7 @@ export const RightArrow = () => <svg
         >Learn more<RightArrow /></a>
       </div>
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={Share} 
           alt="A browser window showing a Storybook being published to a chromatic.com URL" 
@@ -133,9 +122,7 @@ export const RightArrow = () => <svg
         >Learn more<RightArrow /></a>
       </div>
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={FigmaPlugin} 
           alt="Windows showing the Storybook plugin in Figma" 
@@ -149,9 +136,7 @@ export const RightArrow = () => <svg
         >Learn more<RightArrow /></a>
       </div>
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={Testing} 
           alt="Screenshot of tests passing and failing" 
@@ -165,9 +150,7 @@ export const RightArrow = () => <svg
         >Learn more<RightArrow /></a>
       </div>
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={Accessibility} 
           alt="Screenshot of accessibility tests passing and failing" 
@@ -180,9 +163,7 @@ export const RightArrow = () => <svg
         >Learn more<RightArrow /></a>
       </div>
       <div className="sb-grid-item">
-        <Image 
-          width={0}
-          height={0}
+        <img 
           style={{ width: '100%', height: 'auto' }} 
           src={Theming} 
           alt="Screenshot of Storybook in light and dark mode" 
@@ -207,7 +188,7 @@ export const RightArrow = () => <svg
       >Discover all addons<RightArrow /></a>
   </div>
   <div className='sb-addon-img'>
-    <Image 
+    <img 
       width={650}
       height={347}
       src={AddonLibrary} 
@@ -218,10 +199,9 @@ export const RightArrow = () => <svg
 
 <div className="sb-section sb-socials">
     <div className="sb-section-item">
-      <Image 
+      <img 
         width={32}
         height={32}
-        layout="fixed"
         src={Github} 
         alt="Github logo" 
         className="sb-explore-image"
@@ -234,10 +214,9 @@ export const RightArrow = () => <svg
       >Star on GitHub<RightArrow /></a>
     </div>
     <div className="sb-section-item">
-      <Image 
+      <img 
         width={33}
         height={32}
-        layout="fixed"
         src={Discord} 
         alt="Discord logo" 
         className="sb-explore-image"
@@ -252,10 +231,9 @@ export const RightArrow = () => <svg
       </div>
     </div>
     <div className="sb-section-item">
-      <Image 
+      <img 
         width={32}
         height={32}
-        layout="fixed"
         src={Youtube} 
         alt="Youtube logo" 
         className="sb-explore-image"
@@ -270,10 +248,9 @@ export const RightArrow = () => <svg
       </div>
     </div>
     <div className="sb-section-item">
-      <Image 
+      <img 
         width={33}
         height={32}
-        layout="fixed"
         src={Tutorials} 
         alt="A book" 
         className="sb-explore-image"

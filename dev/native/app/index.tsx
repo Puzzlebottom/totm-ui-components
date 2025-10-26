@@ -1,5 +1,4 @@
-import { Text } from "react-native";
-import { View } from "components/view";
+import { View } from "react-native";
 import StorybookUIRoot from "../.rnstorybook"
 
 

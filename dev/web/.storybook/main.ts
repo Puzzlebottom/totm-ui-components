@@ -1,6 +1,6 @@
-import type { StorybookConfig } from "@storybook/nextjs-vite";
+import type { StorybookConfig } from "@storybook/react-native-web-vite";
 
-import { join, dirname } from "path"
+import { join, dirname, resolve } from "path"
 
 /**
 * This function is used to resolve the absolute path of a package.
@@ -15,16 +15,15 @@ const config: StorybookConfig = {
     "../../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   "addons": [
-    getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath('@storybook/addon-docs'),
-    getAbsolutePath('@storybook/addon-onboarding'),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-vitest"),
+    '@chromatic-com/storybook',
+    '@storybook/addon-docs',
+    '@storybook/addon-onboarding',
+    "@storybook/addon-a11y",
+    "@storybook/addon-vitest",
   ],
   "framework": {
-    "name": getAbsolutePath("@storybook/nextjs-vite"),
-    "options": {
-    }
+    "name": "@storybook/react-native-web-vite",
+    "options": {}
   },
   "staticDirs": [
     "../public"
@@ -33,12 +32,22 @@ const config: StorybookConfig = {
     // Merge with our custom Vite config
     const { mergeConfig } = await import('vite');
     return mergeConfig(config, {
-      transpilePackages: [
-        'components',
-      ],
       resolve: {
         alias: {
           'react-native': 'react-native-web',
+          // Point directly to source files for hot reload
+          'totm-ui-components': resolve(__dirname, '../../../src/index.ts'),
+        },
+      },
+      optimizeDeps: {
+        include: [
+          'react-native-web',
+        ],
+        exclude: ['markdown-to-jsx', 'totm-ui-components'],
+      },
+      server: {
+        fs: {
+          allow: ['../..'],
         },
       },
     });
