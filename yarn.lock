@@ -9927,8 +9927,8 @@ totalist@^3.0.0:
   resolved "https://registry.yarnpkg.com/totalist/-/totalist-3.0.1.tgz#ba3a3d600c915b1a97872348f79c127475f6acf8"
   integrity sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==
 
-"totm-ui-components@file:src":
-  version "1.0.0"
+"totm-ui-components@file:src/dist":
+  version "0.0.0"
 
 tr46@~0.0.3:
   version "0.0.3"
