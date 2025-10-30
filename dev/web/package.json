@@ -14,7 +14,7 @@
     "react-native-svg": "^15.14.0",
     "react-native-web": "^0.21.2",
     "tamagui": "^1.135.4",
-    "totm-ui-components": "file:../../src"
+    "@puzzlebottom/totm-ui-components": "file:../../src"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",

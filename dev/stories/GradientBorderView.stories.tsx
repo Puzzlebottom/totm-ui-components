@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { GradientBorderView } from 'totm-ui-components';
+import { GradientBorderView } from '@puzzlebottom/totm-ui-components';
 import { View, Text } from 'react-native';
 
 const meta: Meta<typeof GradientBorderView> = {

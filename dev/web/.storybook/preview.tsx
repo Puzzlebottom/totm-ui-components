@@ -1,4 +1,4 @@
-import { UIProvider } from 'totm-ui-components';
+import { UIProvider } from '@puzzlebottom/totm-ui-components';
 import { View } from 'react-native';
 import type { Preview } from '@storybook/react-native-web-vite';
 

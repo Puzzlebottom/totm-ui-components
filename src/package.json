@@ -1,7 +1,24 @@
 {
-  "name": "totm-ui-components",
-  "version": "1.0.0",
-  "description": "A component library built on Tamagui",
+  "name": "@puzzlebottom/totm-ui-components",
+  "version": "0.1.0",
+  "description": "A cross-platform component library built on Tamagui",
+  "author": "ConorMeldrum",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Puzzlebottom/totm-ui-components.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "tamagui",
+    "ui-components",
+    "component-library",
+    "expo",
+    "cross-platform",
+    "mobile",
+    "web",
+    "typescript"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",

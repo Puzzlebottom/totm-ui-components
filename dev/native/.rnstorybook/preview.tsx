@@ -1,4 +1,4 @@
-import { UIProvider } from 'totm-ui-components';
+import { UIProvider } from '@puzzlebottom/totm-ui-components';
 import type { Preview } from '@storybook/react';
 import { View } from 'react-native';
 

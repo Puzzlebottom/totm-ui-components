@@ -36,14 +36,14 @@ const config: StorybookConfig = {
         alias: {
           'react-native': 'react-native-web',
           // Point directly to source files for hot reload
-          'totm-ui-components': resolve(__dirname, '../../../src/index.ts'),
+          '@puzzlebottom/totm-ui-components': resolve(__dirname, '../../../src/index.ts'),
         },
       },
       optimizeDeps: {
         include: [
           'react-native-web',
         ],
-        exclude: ['markdown-to-jsx', 'totm-ui-components'],
+        exclude: ['markdown-to-jsx', '@puzzlebottom/totm-ui-components'],
       },
       server: {
         fs: {

@@ -7,9 +7,9 @@ A React Native component library built on Tamagui, designed for cross-platform a
 ## Installation
 
 ```bash
-npm install totm-ui-components
+npm install @puzzlebottom/totm-ui-components
 # or
-yarn add totm-ui-components
+yarn add @puzzlebottom/totm-ui-components
 ```
 
 ## Development Setup

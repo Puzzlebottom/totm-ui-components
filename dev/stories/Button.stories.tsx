@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from 'totm-ui-components';
+import { Button } from '@puzzlebottom/totm-ui-components';
 import { View } from 'react-native';
 
 const meta: Meta<typeof Button> = {

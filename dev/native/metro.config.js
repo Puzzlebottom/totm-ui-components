@@ -19,7 +19,7 @@ config.resolver.disableHierarchicalLookup = true
 
 // Resolve totm-ui-components from source files for hot reload
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (moduleName === 'totm-ui-components') {
+  if (moduleName === '@puzzlebottom/totm-ui-components') {
     return {
       filePath: path.resolve(workspaceRoot, 'src/index.ts'),
       type: 'sourceFile',
