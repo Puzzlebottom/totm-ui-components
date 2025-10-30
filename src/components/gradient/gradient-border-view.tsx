@@ -2,10 +2,13 @@ import { StyleSheet, View, type ViewProps } from "react-native";
 import { _GradientBorder, GradientBorderViewStyle } from "./_gradient-border";
 import { getGradientBorderComponentStyles } from "./get-gradient-border-component-styles";
 
+
+export type GradientBorderViewProps = Omit<ViewProps, "style"> & {
+  style?: GradientBorderViewStyle;
+} & React.RefAttributes<View>
+
 export const GradientBorderView = (
-  props: Omit<ViewProps, "style"> & {
-    style?: GradientBorderViewStyle;
-  } & React.RefAttributes<View>,
+  props: GradientBorderViewProps
 ) => {
   const defaultBorderWidth = 1;
 

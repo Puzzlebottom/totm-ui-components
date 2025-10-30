@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { GradientText } from 'totm-ui-components';
+import { GradientText, type GradientTextProps } from 'totm-ui-components';
 import { View } from 'react-native';
 
 const meta: Meta<typeof GradientText> = {
@@ -17,7 +17,7 @@ const meta: Meta<typeof GradientText> = {
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<GradientTextProps>;
 
 // Default Gradient Text
 export const Default: Story = {
@@ -33,6 +33,7 @@ export const Customized: Story = {
   render: () => (
     <GradientText
       colors={['#D3D3D3', '#000000']}
+      locations={[0, 1, 2]}
       start={[0, 0]}
       style={{ fontSize: 48, fontWeight: 'bold' }}
     >

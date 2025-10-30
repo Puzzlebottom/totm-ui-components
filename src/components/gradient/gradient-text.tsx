@@ -2,35 +2,46 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Platform, Text, type TextProps } from "react-native";
 import { useTheme } from "tamagui";
 import { Gradient, type GradientProps } from "./gradient";
+import { LinearGradient } from "@tamagui/linear-gradient";
+import { GetProps } from "tamagui";
+
+type BaseLinearGradientProps = GetProps<typeof LinearGradient>
+
+// Helper type: if colors is provided, locations must be provided (and vice versa)
+type GradientTextColorProps =
+  | { colors?: never; locations?: never } // Neither provided - use defaults
+  | { colors: BaseLinearGradientProps['colors']; locations: BaseLinearGradientProps['locations'] } // Both provided
 
 export type GradientTextProps = TextProps & {
-  colors?: GradientProps['colors'];
   start?: GradientProps['start'];
   end?: GradientProps['end'];
-  locations?: GradientProps['locations'];
-};
+} & GradientTextColorProps;
 
-const _GradientTextMobile = ({ children, colors, start, end, locations, ...props }: GradientTextProps) => (
-  <MaskedView
-    maskElement={
-      <Text {...props} style={[props.style, { backgroundColor: 'transparent' }]}>
-        {children}
-      </Text>
-    }
-  >
-    <Gradient
-      colors={colors}
-      start={start}
-      end={end}
-      locations={locations}
+const _GradientTextMobile = ({ children, colors, start, end, locations, ...props }: GradientTextProps) => {
+  // Build gradient props object, type assertion is safe because GradientTextProps enforces the constraint
+  const gradientProps = {
+    ...(colors !== undefined && locations !== undefined ? { colors, locations } : {}),
+    ...(start !== undefined ? { start } : {}),
+    ...(end !== undefined ? { end } : {}),
+  } as GradientProps;
+
+  return (
+    <MaskedView
+      maskElement={
+        <Text {...props} style={[props.style, { backgroundColor: 'transparent' }]}>
+          {children}
+        </Text>
+      }
     >
-      {/* Invisible text to maintain proper sizing */}
-      <Text {...props} style={[props.style, { opacity: 0 }]}>
-        {children}
-      </Text>
-    </Gradient>
-  </MaskedView>
-);
+      <Gradient {...gradientProps}>
+        {/* Invisible text to maintain proper sizing */}
+        <Text {...props} style={[props.style, { opacity: 0 }]}>
+          {children}
+        </Text>
+      </Gradient>
+    </MaskedView>
+  );
+};
 
 const _GradientTextWeb = ({ children, colors, start, end, locations, style, ...props }: GradientTextProps) => {
   const theme = useTheme();

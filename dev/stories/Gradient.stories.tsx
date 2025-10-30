@@ -39,6 +39,7 @@ export const Customized: Story = {
   render: () => (
     <Gradient
       colors={['#D3D3D3', '#000000']}
+      locations={[0, 1]}
       start={[0, 0]}
       width={300}
       height={200}

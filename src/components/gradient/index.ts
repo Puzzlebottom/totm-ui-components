@@ -1,7 +1,7 @@
-import { GradientBorderView } from "./gradient-border-view"
-import { Gradient } from "./gradient"
-import { GradientText } from "./gradient-text"
-import { getGradientBorderComponentStyles } from "./get-gradient-border-component-styles"
 import { _GradientBorder } from "./_gradient-border"
+import { getGradientBorderComponentStyles } from "./get-gradient-border-component-styles"
+import { Gradient, type GradientProps } from "./gradient"
+import { GradientBorderView, type GradientBorderViewProps } from "./gradient-border-view"
+import { GradientText, type GradientTextProps } from "./gradient-text"
 
-export { GradientBorderView, Gradient, GradientText, getGradientBorderComponentStyles, _GradientBorder }
+export { _GradientBorder, getGradientBorderComponentStyles, Gradient, GradientBorderView, GradientText, type GradientBorderViewProps, type GradientProps, type GradientTextProps }

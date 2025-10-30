@@ -49,7 +49,7 @@ const _GradientBorderMobile = ({
     }
     style={[StyleSheet.absoluteFill]}
   >
-    <Gradient colors={['$purple11', '$pink7', '$red7']} style={{ flex: 1 }} />
+    <Gradient colors={['$purple11', '$pink7', '$red7']} locations={[0, 0.5, 1]} style={{ flex: 1 }} />
   </MaskedView>
 );
 
