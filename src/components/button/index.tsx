@@ -10,7 +10,7 @@ import {
   useTheme,
   withStaticProperties,
 } from 'tamagui'
-import { Gradient, GradientBorderView } from '../gradient'
+import { Gradient, GradientBorderView, GradientText } from '../gradient'
 
 export const ButtonContext = createStyledContext({
   size: '$4' as SizeTokens,
@@ -72,7 +72,7 @@ export const ButtonFrame = styled(View, {
 
 export type ButtonProps = GetProps<typeof ButtonFrame>
 
-export const ButtonText = styled(Text, {
+const ButtonTextFrame = styled(Text, {
   name: 'ButtonText',
   context: ButtonContext,
   color: '$color',
@@ -93,12 +93,40 @@ export const ButtonText = styled(Text, {
       secondary: {
         color: 'white',
       },
-      outline: {
-        color: '$purple12',
-      },
+
     },
   } as const,
 })
+
+// Wrapper component that uses GradientText for outline variant
+const ButtonTextComponent = (props: GetProps<typeof ButtonTextFrame>) => {
+  const { variant, size } = useContext(ButtonContext.context)
+  const theme = useTheme()
+
+  if (variant === 'outline') {
+    // Extract base props for Text component
+    const { children, style, ...restProps } = props
+
+    return (
+      <GradientText
+        {...(restProps as any)}
+        style={[
+          {
+            fontFamily: theme.body?.get(),
+            fontWeight: '700',
+          },
+          style,
+        ] as any}
+      >
+        {children}
+      </GradientText>
+    )
+  }
+
+  return <ButtonTextFrame {...props} />
+}
+
+export const ButtonText = ButtonTextComponent
 
 const ButtonIcon = (props: { children: React.ReactNode }) => {
   const { size } = useContext(ButtonContext.context)
