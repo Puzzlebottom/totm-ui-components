@@ -1,5 +1,5 @@
 import { getSize, getSpace } from '@tamagui/get-token'
-import { cloneElement, isValidElement, useContext } from 'react'
+import { cloneElement, isValidElement, useContext, useState } from 'react'
 import {
   GetProps,
   SizeTokens,
@@ -10,6 +10,7 @@ import {
   useTheme,
   withStaticProperties,
 } from 'tamagui'
+import { Gradient, GradientBorderView } from '../gradient'
 
 export const ButtonContext = createStyledContext({
   size: '$4' as SizeTokens,
@@ -23,14 +24,6 @@ export const ButtonFrame = styled(View, {
   justify: 'center',
   items: 'center',
   flexDirection: 'row',
-
-  hoverStyle: {
-    bg: '$backgroundHover',
-  },
-
-  pressStyle: {
-    bg: '$backgroundPress',
-  },
 
   variants: {
     size: {
@@ -48,34 +41,24 @@ export const ButtonFrame = styled(View, {
 
     variant: {
       primary: {
-        bg: '$blue10',
-        hoverStyle: {
-          bg: '$blue9',
-        },
-        pressStyle: {
-          bg: '$blue11',
-        },
+        bg: 'transparent', // Gradient background will be layered underneath
       },
       secondary: {
-        bg: 'transparent',
-        borderWidth: 1,
-        borderColor: '$borderColor',
+        bg: '#000',
         hoverStyle: {
-          bg: '$backgroundHover',
+          bg: '#2a2a2a',
         },
         pressStyle: {
-          bg: '$backgroundPress',
+          bg: '#3a3a3a',
         },
       },
       outline: {
         bg: 'transparent',
-        borderWidth: 1,
-        borderColor: '$blue10',
         hoverStyle: {
-          bg: '$blue2',
+          bg: 'rgba(0, 0, 0, 0.05)',
         },
         pressStyle: {
-          bg: '$blue3',
+          bg: 'rgba(0, 0, 0, 0.1)',
         },
       },
     },
@@ -108,10 +91,10 @@ export const ButtonText = styled(Text, {
         color: 'white',
       },
       secondary: {
-        color: '$color',
+        color: 'white',
       },
       outline: {
-        color: '$blue10',
+        color: '$purple12',
       },
     },
   } as const,
@@ -132,7 +115,85 @@ const ButtonIcon = (props: { children: React.ReactNode }) => {
     : null
 }
 
-export const Button = withStaticProperties(ButtonFrame, {
+// Wrapper component that handles gradient styling for different variants
+const ButtonComponent = (props: ButtonProps) => {
+  const variant = props.variant || 'primary'
+  const [isHovered, setIsHovered] = useState(false)
+  const [isPressed, setIsPressed] = useState(false)
+
+  // Extract size-related props to calculate border radius
+  const size = props.size || '$4'
+
+  // Get border radius from size token using getSize
+  const sizeToken = getSize(size as SizeTokens)
+  const borderRadius = sizeToken?.val ? sizeToken.val * 0.25 : 12
+
+  // Primary: Solid gradient background with state-based colors
+  if (variant === 'primary') {
+    // Define gradient colors based on state
+    let gradientColors: string[] = ['$purple11', '$pink7', '$red7'] // Default colors
+
+    if (isPressed) {
+      // Darker/more saturated colors for pressed state
+      gradientColors = ['$purple12', '$pink8', '$red8']
+    } else if (isHovered) {
+      // Slightly lighter colors for hover state
+      gradientColors = ['$purple10', '$pink6', '$red6']
+    }
+
+    return (
+      <Gradient
+        colors={gradientColors}
+        start={[0, 1]}
+        end={[1, 0]}
+        locations={[0, 0.5, 1]}
+        style={{ borderRadius }}
+      >
+        <ButtonFrame
+          {...props}
+          onHoverIn={() => setIsHovered(true)}
+          onHoverOut={() => {
+            setIsHovered(false)
+            setIsPressed(false) // Reset pressed state when leaving the button
+          }}
+          onPressIn={() => setIsPressed(true)}
+          onPressOut={() => setIsPressed(false)}
+        />
+      </Gradient>
+    )
+  }
+
+  // Secondary and Outline: Gradient border
+  if (variant === 'secondary' || variant === 'outline') {
+    const borderWidth = 2
+    // Inner radius should be outer radius minus border width for perfect fit
+    const innerBorderRadius = Math.max(0, borderRadius - borderWidth)
+    // Reduce height to compensate for GradientBorderView padding (borderWidth * 2)
+    const adjustedHeight = sizeToken?.val ? sizeToken.val - (borderWidth * 2) : undefined
+
+    return (
+      <GradientBorderView
+        style={{
+          borderRadius,
+          borderWidth,
+          overflow: 'hidden',
+        }}
+      >
+        <ButtonFrame
+          {...props}
+          style={{
+            borderRadius: innerBorderRadius,
+            height: adjustedHeight,
+          }}
+        />
+      </GradientBorderView>
+    )
+  }
+
+  return <ButtonFrame {...props} />
+}
+
+export const Button = withStaticProperties(ButtonComponent, {
   Props: ButtonContext.Provider,
   Text: ButtonText,
   Icon: ButtonIcon,

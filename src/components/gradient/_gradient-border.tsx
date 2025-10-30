@@ -1,8 +1,7 @@
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import { Gradient } from "./gradient";
-import { tokens } from "@tamagui/config/v4";
 import { useTheme } from "tamagui";
+import { Gradient } from "./gradient";
 
 
 type GradientBorderProps = { borderWidth: number; borderRadius: number };
@@ -44,13 +43,13 @@ const _GradientBorderMobile = ({
   <MaskedView
     maskElement={
       <View
-        pointerEvents="none"
+        pointerEvents="auto"
         style={[StyleSheet.absoluteFill, { borderWidth, borderRadius }]}
       />
     }
     style={[StyleSheet.absoluteFill]}
   >
-    <Gradient style={{ flex: 1 }} />
+    <Gradient colors={['$purple11', '$pink7', '$red7']} style={{ flex: 1 }} />
   </MaskedView>
 );
 
@@ -58,21 +57,22 @@ const _GradientBorderWeb = ({
   borderWidth,
   borderRadius,
 }: GradientBorderProps) => {
-  const { purple12, pink7, red7 } = useTheme();
+  const { purple11, pink7, red7 } = useTheme();
 
-  return (<div
-    style={{
-      position: "absolute",
-      pointerEvents: "none",
-      inset: "0",
-      borderRadius: `${borderRadius}px`,
-      border: `${borderWidth}px solid transparent`,
-      background:
-        `linear-gradient(65deg, ${purple12.variable} 10%, ${pink7.variable} 50%, ${red7.variable} 90%) border-box`,
-      mask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
-      maskComposite: "exclude",
-    }}
-  />
+  return (
+    <div
+      style={{
+        position: "absolute",
+        pointerEvents: "auto",
+        inset: "0",
+        borderRadius: `${borderRadius}px`,
+        border: `${borderWidth}px solid transparent`,
+        background:
+          `linear-gradient(45deg, ${purple11.variable} 10%, ${pink7.variable} 50%, ${red7.variable} 90%) border-box`,
+        mask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+        maskComposite: "exclude",
+      }}
+    />
   )
 };
 
