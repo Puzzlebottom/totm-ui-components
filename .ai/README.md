@@ -12,6 +12,8 @@
 - `component-checklist.md` - Quick checklist while working
 - `architecture.md` - Deep context on "why" behind decisions
 - `writing-usage-guidance.md` - Guide for writing consumer-focused JSDoc
+- `storybook-patterns.md` - Patterns for writing stories
+- `design-tokens.md` - Available design tokens reference
 
 ## For Human Developers
 
@@ -23,6 +25,8 @@
 - `.ai/component-checklist.md` - Complete checklist
 - `.ai/architecture.md` - Technical deep dive
 - `.ai/writing-usage-guidance.md` - JSDoc best practices
+- `.ai/storybook-patterns.md` - Story writing patterns
+- `.ai/design-tokens.md` - Design tokens reference
 
 ## For Library Consumers (Humans & AI)
 
@@ -34,6 +38,7 @@
 **Then reference:**
 - **JSDoc in components** - Comprehensive guidance on when/how to use each component (ships with package!)
 - IDE IntelliSense will show JSDoc when using components
+- `.ai/design-tokens.md` - Available color, size, and spacing tokens
 
 ## Documentation Structure
 
@@ -46,7 +51,9 @@
     ├── README.md                       # This file - documentation map
     ├── component-checklist.md          # Quick reference checklist
     ├── architecture.md                 # Technical deep dive
-    └── writing-usage-guidance.md       # JSDoc writing guide
+    ├── writing-usage-guidance.md       # JSDoc writing guide
+    ├── storybook-patterns.md           # Storybook story patterns
+    └── design-tokens.md                # Design tokens reference
 ```
 
 ## Single Source of Truth
@@ -87,4 +94,8 @@ To avoid redundancy:
 **"I want to verify documentation is accurate"**
 - See "Documentation Maintenance" in `.cursorrules`
 - Check all docs when changing patterns
+
+**"I want to know what design tokens are available"**
+- Read `.ai/design-tokens.md`
+- Check `src/provider/config.ts` for definitions
 

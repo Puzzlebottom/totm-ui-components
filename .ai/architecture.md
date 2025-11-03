@@ -14,11 +14,44 @@ src/
 ├── provider/       # Tamagui config + UIProvider
 └── index.ts        # Main exports
 
-dev/
-├── web/           # Web Storybook
-├── native/        # React Native Storybook  
-└── stories/       # Shared stories (kebab-case files)
+dev/                # Development environments (NOT shipped)
+├── web/            # Vite + Storybook for web
+├── native/         # Expo + Storybook for iOS/Android
+└── stories/        # Shared stories for both environments (kebab-case files)
 ```
+
+## Development Environment
+
+**IMPORTANT:** The `dev/` directory contains development-only applications for testing components. These do NOT ship with the npm package.
+
+### dev/web - Web Storybook
+- **Tech:** Vite + Storybook
+- **Purpose:** Visual testing of components in browser
+- **Start:** `cd dev/web && yarn storybook`
+- **URL:** Usually http://localhost:6006
+- **Config:** Storybook config in `dev/web/` (if present) or uses defaults
+- **Wraps stories with:** UIProvider for Tamagui tokens
+
+### dev/native - Native Storybook
+- **Tech:** Expo + Storybook (React Native)
+- **Purpose:** Visual testing on iOS/Android simulators/devices
+- **Start:** `cd dev/native && yarn start`
+- **Platforms:** iOS Simulator, Android Emulator, Physical devices
+- **Config:** Expo configuration in `dev/native/app.json`
+- **Wraps stories with:** UIProvider for Tamagui tokens
+
+### dev/stories - Shared Stories
+- **Shared across:** Both web and native Storybooks
+- **Format:** `{ComponentName}.stories.tsx` (PascalCase for Storybook titles)
+- **Imports from:** `@puzzlebottom/totm-ui-components` (the package)
+- **Purpose:** 
+  - Visual testing during development
+  - Use-case demonstrations (internal reference)
+  - Does NOT ship with package
+
+**Key Difference from JSDoc:**
+- Stories = dev-only, internal testing/reference
+- JSDoc = ships with package, consumers see in IDE
 
 ## Platform Resolution
 

@@ -1,5 +1,42 @@
 # AI Assistant Rules for totm-ui-components
 
+## Project Architecture (READ THIS FIRST)
+
+This repository has TWO distinct parts:
+
+### 1. **src/** - The Library (ships to npm)
+```
+src/
+├── components/    # UI components
+├── provider/      # Tamagui config + UIProvider
+└── index.ts       # Main exports
+```
+- Ships as TypeScript source (not bundled)
+- Consumers compile it themselves
+- JSDoc in components is PRIMARY documentation (shows in IDE)
+
+### 2. **dev/** - Development Environments (dev-only, does NOT ship)
+```
+dev/
+├── web/           # Vite + Storybook for web testing
+├── native/        # Expo + Storybook for iOS/Android testing  
+└── stories/       # Shared stories for BOTH environments
+```
+
+**Critical Understanding:**
+- `dev/web/` runs Vite + Storybook @ http://localhost:6006
+- `dev/native/` runs Expo + Storybook on iOS/Android simulators
+- `dev/stories/` contains .stories.tsx files shared by BOTH
+- Stories are for visual testing/development ONLY (don't ship)
+- Both Storybooks must wrap components with UIProvider for Tamagui tokens
+- Stories import from `@puzzlebottom/totm-ui-components` (the package)
+
+**Before modifying stories or Storybook config:**
+- Remember dev/web and dev/native are separate apps
+- Changes to stories affect BOTH web and native
+- Design tokens require UIProvider to work
+- Check `.ai/architecture.md` for full dev environment details
+
 ## Core Principles
 
 1. **Follow kebab-case naming** for all files, folders, and stories
