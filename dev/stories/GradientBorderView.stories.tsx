@@ -3,7 +3,7 @@ import { GradientBorderView } from '@puzzlebottom/totm-ui-components';
 import { View, Text } from 'react-native';
 
 const meta: Meta<typeof GradientBorderView> = {
-  title: 'Example/GradientBorderView',
+  title: 'Components/GradientBorderView',
   component: GradientBorderView,
   decorators: [
     (Story) => (

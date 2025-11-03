@@ -1,0 +1,329 @@
+# AI Assistant Rules for totm-ui-components
+
+## Core Principles
+
+1. **Follow kebab-case naming** for all files, folders, and stories
+2. **Ship source, not bundles** - consumers compile TypeScript themselves
+3. **Platform-split only when necessary** - prefer unified implementations
+4. **Extend Tamagui primitives** - don't reinvent wheels
+5. **Document with JSDoc** - types aren't enough
+
+## File Naming
+
+- Folders: `gradient-text/`
+- Components: `gradient-text.tsx` (web), `gradient-text.native.tsx` (native)
+- Stories: `gradient-text.stories.tsx`
+- Exports: `GradientText` (PascalCase for component names)
+
+## When Creating Components
+
+### DO:
+- Read `/CONTRIBUTING.md` first
+- Check `/.ai/component-checklist.md` for steps
+- Reference `/.ai/architecture.md` for patterns
+- Use `styled()` from Tamagui when possible
+- Export types alongside components
+- Add comprehensive JSDoc with:
+  - Brief description
+  - @remarks explaining when to use / when NOT to use
+  - Multiple @example tags for different scenarios
+  - Alternative components to consider
+  - **Remember: JSDoc ships with the package - make it thorough!**
+- Create stories with:
+  - Default variant
+  - Use-case specific examples (not just prop variants)
+  - Storybook docs explaining WHEN to use each variant
+- Test in both web and native Storybooks when applicable
+
+### DON'T:
+- Create `.web.tsx` files (use `.tsx` as web default)
+- Bundle or transpile code (use `tsc` for types only)
+- Add new build dependencies without discussion
+- Skip platform testing if you created `.native.tsx`
+- Commit without running `yarn build` to generate types
+
+## Platform Splitting
+
+**Only split when:**
+- Using native-only APIs (MaskedView, Animated, Linking, etc.)
+- Need fundamentally different rendering (CSS vs native primitives)
+- Performance requires platform-specific optimization
+
+**Pattern:**
+```typescript
+// component-name.tsx (web - default)
+export const Component = () => <div>Web implementation</div>
+
+// component-name.native.tsx (native)
+export const Component = () => <MaskedView>Native implementation</MaskedView>
+```
+
+**Both must export identical interfaces!**
+
+## Component Pattern
+
+```typescript
+import { styled, Stack } from 'tamagui'
+import type { StackProps } from 'tamagui'
+
+export interface ComponentNameProps extends StackProps {
+  variant?: 'default' | 'primary'
+}
+
+/**
+ * ComponentName - Brief description
+ * 
+ * @remarks
+ * Use this component when you need [specific use case]. Prefer [alternative]
+ * when [different scenario].
+ * 
+ * **When to use:**
+ * - Use case 1 with context
+ * - Use case 2 with context
+ * - Use case 3 with context
+ * 
+ * **When NOT to use:**
+ * - Scenario 1 - use [Alternative] instead because [reason]
+ * - Scenario 2 - use [Alternative] instead because [reason]
+ * 
+ * **Note:** JSDoc ships with the package - consumers and AI assistants
+ * see this in their IDE. Make it comprehensive!
+ * 
+ * @example
+ * Basic usage:
+ * ```tsx
+ * <ComponentName variant="primary">Content</ComponentName>
+ * ```
+ * 
+ * @example
+ * Specific use case with context:
+ * ```tsx
+ * // Use for featured content cards
+ * <ComponentName variant="featured">
+ *   Hero content that needs emphasis
+ * </ComponentName>
+ * ```
+ */
+export const ComponentName = styled(Stack, {
+  name: 'ComponentName',
+  // Default styles
+})
+```
+
+## Export Structure
+
+1. Component exports types + implementation:
+   ```typescript
+   // src/components/my-component/index.ts
+   export { MyComponent, type MyComponentProps } from './my-component'
+   ```
+
+2. Add to main exports:
+   ```typescript
+   // src/components/index.ts
+   export { MyComponent, type MyComponentProps } from './my-component'
+   ```
+
+## Story Pattern
+
+```typescript
+import type { Meta, StoryObj } from '@storybook/react';
+import { ComponentName } from '@puzzlebottom/totm-ui-components';
+
+const meta: Meta<typeof ComponentName> = {
+  title: 'Components/ComponentName',
+  component: ComponentName,
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## When to Use
+
+Use ComponentName when you need to [specific use case].
+
+**Good for:**
+- Use case 1
+- Use case 2
+
+**Avoid when:**
+- Scenario 1 - use [Alternative] instead
+- Scenario 2 - use [Alternative] instead
+
+## Accessibility
+
+- Include accessibility notes
+- Keyboard navigation details
+- Screen reader considerations
+        `,
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof ComponentName>;
+
+export const Default: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story: 'Basic usage with default styling.',
+      },
+    },
+  },
+};
+
+export const SpecificUseCase: Story = {
+  args: {
+    variant: 'primary',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Use this variant when [specific scenario that demonstrates WHEN to use it].',
+      },
+    },
+  },
+};
+```
+
+## Dependencies
+
+**Never add these as dependencies:**
+- Build tools (use tsc only)
+- Runtime libraries that consumers should provide
+- Platform-specific modules (make them peer dependencies)
+
+**Peer dependencies philosophy:**
+- Required: `react`, `tamagui`, `@tamagui/config`, `react-native-svg`
+- Optional: Platform-specific (native-only or web-only)
+
+## Testing & Validation
+
+Before considering work complete:
+1. Run `cd src && yarn build` - types must generate without errors
+2. Start web Storybook: `cd dev/web && yarn storybook`
+3. If `.native.tsx` exists: Start native Storybook: `cd dev/native && yarn start`
+4. Verify component appears in both (if applicable)
+5. Check no console errors or warnings
+
+## Documentation Maintenance
+
+**CRITICAL**: Whenever creating or modifying components, verify documentation is still accurate:
+
+**Check and update if needed:**
+- `/CONTRIBUTING.md` - Do patterns/examples still match?
+- `/.ai/architecture.md` - Are architectural decisions still correct?
+- `/.ai/component-checklist.md` - Do steps need adjustment?
+- `/README.md` - Does usage example still work?
+- Component JSDoc comments - Are they accurate and complete?
+
+**When to update:**
+- Adding new component patterns
+- Changing file structure
+- Modifying build process
+- Adding/removing dependencies
+- Changing platform-splitting strategy
+
+**Always ask yourself**: "If someone reads this doc, will it guide them correctly?"
+
+## Communication Style
+
+- **Be proactive** - if you see improvements, suggest them
+- **Explain tradeoffs** - when multiple approaches exist, present options
+- **Show examples** - code snippets > descriptions
+- **Verify understanding** - if requirements unclear, ask specific questions
+- **Complete the task** - don't stop at "you could do X" - do X unless asked otherwise
+
+## Common Patterns
+
+### Importing from the library in stories:
+```typescript
+import { Component } from '@puzzlebottom/totm-ui-components'
+```
+
+### Platform-specific styling:
+Use Tamagui's platform props or `Platform.select()` when unavoidable
+
+### Gradient components:
+- Web: Use CSS (background-clip, linear-gradient, etc.)
+- Native: Use MaskedView + Tamagui LinearGradient
+
+### Custom tokens:
+Add to `src/provider/config.ts` in the `customTokens` object
+
+## File Structure Reference
+
+```
+src/
+├── components/          # All UI components
+│   ├── button/
+│   │   └── index.tsx
+│   ├── gradient/
+│   │   ├── gradient.tsx                    # Unified
+│   │   ├── gradient-text.tsx               # Web
+│   │   ├── gradient-text.native.tsx        # Native
+│   │   └── index.ts
+│   └── index.ts         # Main component exports
+├── provider/
+│   ├── config.ts        # Tamagui config with custom tokens
+│   └── index.tsx        # UIProvider
+└── index.ts             # Library entry point
+
+dev/
+├── stories/             # Storybook stories
+│   ├── button.stories.tsx
+│   └── gradient-text.stories.tsx
+├── web/                 # Web Storybook
+└── native/              # React Native Storybook
+```
+
+## Build System Context
+
+- **Source ships as TypeScript** - no transpilation
+- **Types generated by tsc** - for IDE autocomplete
+- **No Rollup/bundling** - consumers bundle themselves
+- **Platform resolution** - handled by Metro (native) or Vite/Webpack (web)
+
+This architecture prevents dual-instance issues and improves tree-shaking.
+
+## Use Context7 for Library Best Practices
+
+**IMPORTANT**: Before implementing patterns with any library, use the Context7 MCP connection to verify current best practices:
+
+```
+Use mcp_context7_resolve-library-id and mcp_context7_get-library-docs for:
+- Storybook (@storybook/react, @storybook/react-native)
+- Tamagui (tamagui)
+- React (react)
+- React Native (react-native)
+- React Native Web (react-native-web)
+- Expo (expo)
+- Vite (vite)
+```
+
+**Why**: Library APIs and best practices change. Always verify against official docs before:
+- Adding new components
+- Using unfamiliar APIs
+- Implementing complex patterns
+- Troubleshooting issues
+
+## When in Doubt
+
+1. **Use Context7** to check library documentation
+2. Check existing components for patterns
+3. Consult `/CONTRIBUTING.md`
+4. Reference `/.ai/architecture.md`
+5. Ask specific questions rather than guessing
+
+## Quality Standards
+
+- **Types**: Export all public interfaces
+- **Documentation**: JSDoc on exported functions/components
+- **Examples**: Include @example in JSDoc
+- **Stories**: Minimum Default + 2 variants
+- **Platform**: Test both if you split files
+- **Build**: Must pass `yarn build` without errors
+

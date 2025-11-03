@@ -3,7 +3,7 @@ import { GradientText, type GradientTextProps } from '@puzzlebottom/totm-ui-comp
 import { View } from 'react-native';
 
 const meta: Meta<typeof GradientText> = {
-  title: 'Example/GradientText',
+  title: 'Components/GradientText',
   component: GradientText,
   decorators: [
     (Story) => (

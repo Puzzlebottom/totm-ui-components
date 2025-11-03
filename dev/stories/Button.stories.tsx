@@ -3,7 +3,7 @@ import { Button } from '@puzzlebottom/totm-ui-components';
 import { View } from 'react-native';
 
 const meta: Meta<typeof Button> = {
-  title: 'Example/Button',
+  title: 'Components/Button',
   component: Button,
   decorators: [
     (Story) => (
