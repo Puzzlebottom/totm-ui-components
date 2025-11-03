@@ -1,7 +1,6 @@
-import MaskedView from "@react-native-masked-view/masked-view";
-import { Platform, Text, type TextProps } from "react-native";
+import { Text, type TextProps } from "react-native";
 import { useTheme } from "tamagui";
-import { Gradient, type GradientProps } from "./gradient";
+import { type GradientProps } from "./gradient";
 import { LinearGradient } from "@tamagui/linear-gradient";
 import { GetProps } from "tamagui";
 
@@ -17,33 +16,7 @@ export type GradientTextProps = TextProps & {
   end?: GradientProps['end'];
 } & GradientTextColorProps;
 
-const _GradientTextMobile = ({ children, colors, start, end, locations, ...props }: GradientTextProps) => {
-  // Build gradient props object, type assertion is safe because GradientTextProps enforces the constraint
-  const gradientProps = {
-    ...(colors !== undefined && locations !== undefined ? { colors, locations } : {}),
-    ...(start !== undefined ? { start } : {}),
-    ...(end !== undefined ? { end } : {}),
-  } as GradientProps;
-
-  return (
-    <MaskedView
-      maskElement={
-        <Text {...props} style={[props.style, { backgroundColor: 'transparent' }]}>
-          {children}
-        </Text>
-      }
-    >
-      <Gradient {...gradientProps}>
-        {/* Invisible text to maintain proper sizing */}
-        <Text {...props} style={[props.style, { opacity: 0 }]}>
-          {children}
-        </Text>
-      </Gradient>
-    </MaskedView>
-  );
-};
-
-const _GradientTextWeb = ({ children, colors, start, end, locations, style, ...props }: GradientTextProps) => {
+export const GradientText = ({ children, colors, start, end, locations, style, ...props }: GradientTextProps) => {
   const theme = useTheme();
 
   // Resolve color tokens to actual values
@@ -85,6 +58,7 @@ const _GradientTextWeb = ({ children, colors, start, end, locations, style, ...p
       style={[
         style,
         {
+          display: 'inline-block', // Make element size to content, not container
           background: `linear-gradient(${angle}deg, ${colorStops})`,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -96,11 +70,3 @@ const _GradientTextWeb = ({ children, colors, start, end, locations, style, ...p
     </Text>
   );
 };
-
-export const GradientText = (props: GradientTextProps) => {
-  return Platform.select({
-    native: <_GradientTextMobile {...props} />,
-    web: <_GradientTextWeb {...props} />,
-  }) as React.ReactElement;
-};
-

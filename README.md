@@ -12,15 +12,54 @@ npm install @puzzlebottom/totm-ui-components
 yarn add @puzzlebottom/totm-ui-components
 ```
 
+### Required Peer Dependencies
+
+All platforms require:
+```bash
+npm install react tamagui @tamagui/config react-native-svg
+```
+
+### Platform-Specific Dependencies
+
+**For React Native / Expo:**
+```bash
+npm install react-native @react-native-masked-view/masked-view expo-linear-gradient
+```
+
+**For Web:**
+```bash
+npm install react-dom react-native-web
+```
+
+## Usage
+
+Wrap your app with the UIProvider:
+
+```typescript
+import { UIProvider, Button, GradientText } from '@puzzlebottom/totm-ui-components'
+
+function App() {
+  return (
+    <UIProvider>
+      <Button>Click me</Button>
+      <GradientText>Beautiful gradient text</GradientText>
+    </UIProvider>
+  )
+}
+```
+
 ## Development Setup
 
 ```bash
 # Install dependencies
 yarn install
 
-# Build the component library in watch mode
+# Generate type declarations (watches for changes)
 cd src
 yarn dev
+
+# Or build types once
+yarn build
 ```
 
 ## Running Storybook

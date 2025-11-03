@@ -1,5 +1,6 @@
-import { StyleProp, ViewStyle } from "react-native";
-import { useTheme } from "tamagui";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { Gradient } from "./gradient";
 
 type GradientBorderProps = { borderWidth: number; borderRadius: number };
 
@@ -36,22 +37,17 @@ export type GradientBorderViewStyle = StyleProp<
 export const _GradientBorder = ({
   borderWidth,
   borderRadius,
-}: GradientBorderProps) => {
-  const { purple11, pink7, red7 } = useTheme();
+}: GradientBorderProps) => (
+  <MaskedView
+    maskElement={
+      <View
+        pointerEvents="auto"
+        style={[StyleSheet.absoluteFill, { borderWidth, borderRadius }]}
+      />
+    }
+    style={[StyleSheet.absoluteFill]}
+  >
+    <Gradient colors={['$purple11', '$pink7', '$red7']} locations={[0, 0.5, 1]} style={{ flex: 1 }} />
+  </MaskedView>
+);
 
-  return (
-    <div
-      style={{
-        position: "absolute",
-        pointerEvents: "auto",
-        inset: "0",
-        borderRadius: `${borderRadius}px`,
-        border: `${borderWidth}px solid transparent`,
-        background:
-          `linear-gradient(45deg, ${purple11.variable} 10%, ${pink7.variable} 50%, ${red7.variable} 90%) border-box`,
-        mask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
-        maskComposite: "exclude",
-      }}
-    />
-  )
-};
