@@ -9,6 +9,7 @@
 - Communication guidelines
 
 **Then reference:**
+- `roadmap.md` - Current goals, bugs, and improvements (check this FIRST)
 - `component-checklist.md` - Quick checklist while working
 - `architecture.md` - Deep context on "why" behind decisions
 - `writing-usage-guidance.md` - Guide for writing consumer-focused JSDoc
@@ -49,6 +50,7 @@
 ├── .cursorrules                        # AI assistant rules (comprehensive)
 └── .ai/
     ├── README.md                       # This file - documentation map
+    ├── roadmap.md                      # Goals, bugs, improvements (living doc)
     ├── component-checklist.md          # Quick reference checklist
     ├── architecture.md                 # Technical deep dive
     ├── writing-usage-guidance.md       # JSDoc writing guide
@@ -77,7 +79,11 @@ To avoid redundancy:
 
 ## Quick Reference by Task
 
+**"What should I work on next?"**
+- Check `roadmap.md` for priorities, bugs, and improvements
+
 **"I want to create a new component"**
+- Check `roadmap.md` for next priority
 - AI: Follow `.cursorrules` + `component-checklist.md`
 - Human: Follow `CONTRIBUTING.md` + `component-checklist.md`
 

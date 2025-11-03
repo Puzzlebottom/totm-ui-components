@@ -49,3 +49,9 @@ If component needs native APIs:
 - [ ] Native version in `component-name.native.tsx`
 - [ ] Both export same interface/types
 
+## Roadmap Maintenance
+- [ ] Mark component as completed in `.ai/roadmap.md` with date
+- [ ] Add any discovered bugs to roadmap
+- [ ] Add any identified improvements to roadmap
+- [ ] Update priority of remaining items if needed
+

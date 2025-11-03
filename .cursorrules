@@ -37,6 +37,10 @@ dev/
 - Design tokens require UIProvider to work
 - Check `.ai/architecture.md` for full dev environment details
 
+**Before starting any work:**
+- Check `.ai/roadmap.md` for current priorities, known bugs, and planned improvements
+- Update roadmap when completing tasks or discovering issues
+
 ## Core Principles
 
 1. **Follow kebab-case naming** for all files, folders, and stories
