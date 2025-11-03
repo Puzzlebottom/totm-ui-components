@@ -9,12 +9,6 @@
 Priority ordered by user need frequency:
 
 ### High Priority (Essential for Most Apps)
-- [ ] Box/View - Universal layout component (replaces `<div>`)
-  - Cross-platform compatibility (web ↔ mobile)
-  - Enables copy/paste of entire screens between platforms
-  - All style props work identically on web and native
-- [ ] Card - Container for grouped content
-- [ ] Input/TextField - Text input for forms
 - [ ] Avatar - User profile pictures
 - [ ] Badge - Notification counts, status indicators
 - [ ] Modal/Dialog - Confirmations, forms, alerts
@@ -83,6 +77,20 @@ _None currently_
 ## Completed
 
 ### Components
+- [x] Input/TextField - Text input for forms (Nov 3, 2025)
+  - Text, email, password input types
+  - Native secureTextEntry for passwords
+  - Consistent styling across platforms
+  - Form integration support
+- [x] Box/View - Universal layout component (Nov 3, 2025)
+  - Cross-platform compatibility (web ↔ mobile)
+  - Enables copy/paste of entire screens between platforms
+  - All style props work identically on web and native
+  - Replaces `<div>` on web
+- [x] Card - Container for grouped content (Nov 3, 2025)
+  - Default and elevated variants
+  - Consistent card styling
+  - Perfect for encounters, characters, lists
 - [x] Heading - Semantic h1-h6 component (Nov 3, 2025)
 - [x] Text - Typography with size variants (Nov 3, 2025)
 - [x] Button - Multiple variants with gradient support (Existing)

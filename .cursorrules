@@ -85,19 +85,35 @@ dev/
 
 ## Platform Splitting
 
-**Only split when:**
-- Using native-only APIs (MaskedView, Animated, Linking, etc.)
-- Need fundamentally different rendering (CSS vs native primitives)
-- Performance requires platform-specific optimization
+**CRITICAL: Do NOT split unless absolutely necessary!**
 
-**Pattern:**
+**Only split when you're using DIFFERENT primitives or APIs:**
+- Native-only APIs that don't exist on web (MaskedView, Animated, Linking)
+- Fundamentally different rendering approaches (CSS gradients vs MaskedView)
+- Platform-specific performance optimizations
+
+**DO NOT split when:**
+- Using the same Tamagui component with different props (Tamagui handles cross-platform)
+- Props work differently per platform (secureTextEntry, keyboardType, etc.) - Tamagui Input handles this!
+- Styling differences only - use Tamagui's platform props instead
+
+**Example - When to split (GradientText):**
 ```typescript
-// component-name.tsx (web - default)
-export const Component = () => <div>Web implementation</div>
+// gradient-text.tsx (web - using CSS)
+export const GradientText = () => <Text style={{ backgroundClip: 'text' }}>...</Text>
 
-// component-name.native.tsx (native)
-export const Component = () => <MaskedView>Native implementation</MaskedView>
+// gradient-text.native.tsx (native - using MaskedView)
+export const GradientText = () => <MaskedView>...</MaskedView>
 ```
+**Different primitives** = Split ✅
+
+**Example - When NOT to split (Input):**
+```typescript
+// input.tsx (UNIFIED - no split needed!)
+export const Input = styled(TamaguiInput, { ... })
+// Tamagui's Input already handles secureTextEntry, keyboardType, etc. cross-platform!
+```
+**Same primitive** = Don't split ❌
 
 **Both must export identical interfaces!**
 
@@ -332,12 +348,12 @@ This architecture prevents dual-instance issues and improves tree-shaking.
 
 ## Use Context7 for Library Best Practices
 
-**IMPORTANT**: Before implementing patterns with any library, use the Context7 MCP connection to verify current best practices:
+**CRITICAL**: Before implementing with any library, use Context7 MCP to verify current best practices:
 
 ```
 Use mcp_context7_resolve-library-id and mcp_context7_get-library-docs for:
 - Storybook (@storybook/react, @storybook/react-native)
-- Tamagui (tamagui)
+- Tamagui (tamagui) - ESPECIALLY for style prop shorthands!
 - React (react)
 - React Native (react-native)
 - React Native Web (react-native-web)
@@ -345,11 +361,33 @@ Use mcp_context7_resolve-library-id and mcp_context7_get-library-docs for:
 - Vite (vite)
 ```
 
+**For Tamagui components - ALWAYS check Context7 first for:**
+- **Style shorthands** (px, py, p, m, rounded, bg, etc.) - Don't guess!
+- Component APIs and available props
+- Platform-specific behavior
+- Variant patterns and best practices
+
+**Common Tamagui shorthands you MUST know:**
+- `rounded` = borderRadius (NOT `br`)
+- `bg` = background
+- `p` = padding, `px` = paddingHorizontal, `py` = paddingVertical
+- `m` = margin, `mx` = marginHorizontal, `my` = marginVertical
+- `w` = width, `h` = height
+- `f` = flex
+
 **Why**: Library APIs and best practices change. Always verify against official docs before:
 - Adding new components
+- Using style props (check shorthands!)
 - Using unfamiliar APIs
 - Implementing complex patterns
 - Troubleshooting issues
+
+**If you're unsure about a Tamagui prop name, query Context7 with:**
+```
+"Tamagui style shorthands and props"
+"Tamagui borderRadius shorthand"
+"Tamagui styled component API"
+```
 
 ## When in Doubt
 
