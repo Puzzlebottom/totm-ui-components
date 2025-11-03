@@ -70,6 +70,86 @@ export const ButtonFrame = styled(View, {
   },
 } as const)
 
+/**
+ * Button component for user actions with multiple variants and built-in gradient styling.
+ * 
+ * @remarks
+ * Use Button for standard interactive actions that trigger app behavior. Supports primary
+ * (gradient background), secondary (solid with gradient border), and outline (transparent
+ * with gradient text and border) variants.
+ * 
+ * **When to use:**
+ * - Form submissions and confirmations
+ * - Primary and secondary call-to-action elements
+ * - Dialog actions (confirm, cancel)
+ * - Triggering modals, navigation, or state changes
+ * - Any interactive element that performs an action (not navigation)
+ * 
+ * **When NOT to use:**
+ * - Navigation between screens - use `Link` instead for better semantics and accessibility
+ * - Toggling state - use `Switch` or `Checkbox` for on/off controls
+ * - Selecting from options - use radio buttons or segmented controls
+ * - Icon-only actions without text - consider if `IconButton` would be more accessible
+ * 
+ * **Accessibility:**
+ * - Buttons include hover and press states for visual feedback
+ * - Text contrast is optimized for each variant
+ * - Use `Button.Icon` to add icons with proper sizing
+ * 
+ * **Performance note:**
+ * - Primary variant uses gradient background (slight rendering cost)
+ * - Hover/press states dynamically change gradient colors
+ * - GradientBorderView adds layout complexity for secondary/outline variants
+ * 
+ * @example
+ * Basic primary button (form submission):
+ * ```tsx
+ * <Button variant="primary" onPress={() => console.log('Submit')}>
+ *   <Button.Text>Submit</Button.Text>
+ * </Button>
+ * ```
+ * 
+ * @example
+ * Secondary button (less emphasis action):
+ * ```tsx
+ * <Button variant="secondary" onPress={() => console.log('Save')}>
+ *   <Button.Text>Save Draft</Button.Text>
+ * </Button>
+ * ```
+ * 
+ * @example
+ * Outline button (tertiary action):
+ * ```tsx
+ * <Button variant="outline" onPress={() => console.log('Cancel')}>
+ *   <Button.Text>Cancel</Button.Text>
+ * </Button>
+ * ```
+ * 
+ * @example
+ * Button with icon (provide your own icon component):
+ * ```tsx
+ * import { Plus } from 'your-icon-library'
+ * 
+ * <Button variant="primary" onPress={() => console.log('Add')}>
+ *   <Button.Icon>
+ *     <Plus />
+ *   </Button.Icon>
+ *   <Button.Text>Add Item</Button.Text>
+ * </Button>
+ * ```
+ * 
+ * @example
+ * Different sizes:
+ * ```tsx
+ * <Button size="$3" variant="primary" onPress={() => {}}>
+ *   <Button.Text>Small</Button.Text>
+ * </Button>
+ * 
+ * <Button size="$5" variant="primary" onPress={() => {}}>
+ *   <Button.Text>Large</Button.Text>
+ * </Button>
+ * ```
+ */
 export type ButtonProps = GetProps<typeof ButtonFrame>
 
 const ButtonTextFrame = styled(Text, {
