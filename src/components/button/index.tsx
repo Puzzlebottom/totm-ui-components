@@ -187,16 +187,15 @@ const ButtonTextComponent = (props: GetProps<typeof ButtonTextFrame>) => {
     // Extract base props for Text component
     const { children, style, ...restProps } = props
 
+    // GradientText uses Tamagui's Text, so pass fontSize, fontFamily, fontWeight as Tamagui props
+    // Tamagui will resolve the size token to the appropriate fontSize
     return (
       <GradientText
         {...(restProps as any)}
-        style={[
-          {
-            fontFamily: theme.body?.get(),
-            fontWeight: '700',
-          },
-          style,
-        ] as any}
+        fontSize={size}
+        fontFamily="$body"
+        fontWeight="700"
+        style={style}
       >
         {children}
       </GradientText>

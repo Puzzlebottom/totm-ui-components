@@ -28,17 +28,25 @@ export const Default: Story = {
   ),
 };
 
-// With Custom Colors
+// With Custom Colors and Direction
 export const Customized: Story = {
   render: () => (
     <GradientText
       colors={['#D3D3D3', '#000000']}
-      locations={[0, 1, 2]}
-      start={[0, 0]}
+      locations={[0, 1]}
+      gradientStart={[0, 0]}
+      gradientEnd={[0, 1]}
       style={{ fontSize: 48, fontWeight: 'bold' }}
     >
       Customized
     </GradientText>
   ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Custom gradient colors and direction. Use `start` and `end` as objects `{ x, y }` or arrays `[x, y]` where values range from 0 to 1.',
+      },
+    },
+  },
 };
 

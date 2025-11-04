@@ -169,6 +169,7 @@ export const Text = styled(TamaguiText, {
   name: 'Text',
   color: '$color',
   fontFamily: '$body',
+  position: 'relative', // Creates stacking context so text renders above gradients
 
   variants: {
     size: {

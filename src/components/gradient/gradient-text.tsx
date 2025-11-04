@@ -1,8 +1,7 @@
-import { Text, type TextProps } from "react-native";
-import { useTheme } from "tamagui";
+import { Text, useTheme, GetProps } from "tamagui";
+import type { TextProps } from "tamagui";
 import { type GradientProps } from "./gradient";
 import { LinearGradient } from "@tamagui/linear-gradient";
-import { GetProps } from "tamagui";
 
 type BaseLinearGradientProps = GetProps<typeof LinearGradient>
 
@@ -91,11 +90,11 @@ type GradientTextColorProps =
  * ```
  */
 export type GradientTextProps = TextProps & {
-  start?: GradientProps['start'];
-  end?: GradientProps['end'];
+  gradientStart?: GradientProps['start'];
+  gradientEnd?: GradientProps['end'];
 } & GradientTextColorProps;
 
-export const GradientText = ({ children, colors, start, end, locations, style, ...props }: GradientTextProps) => {
+export const GradientText = ({ children, colors, gradientStart, gradientEnd, locations, style, ...props }: GradientTextProps) => {
   const theme = useTheme();
 
   // Resolve color tokens to actual values
@@ -109,8 +108,8 @@ export const GradientText = ({ children, colors, start, end, locations, style, .
 
   // Use Gradient defaults if not provided
   const resolvedColors = colors || ['$purple11', '$pink7', '$red7'];
-  const resolvedStart = start || [0, 1];
-  const resolvedEnd = end || [1, 0];
+  const resolvedStart = gradientStart || [0, 1];
+  const resolvedEnd = gradientEnd || [1, 0];
   const resolvedLocations = locations || [0, 0.5, 1];
 
   const gradientColors = resolvedColors.map(resolveColor);

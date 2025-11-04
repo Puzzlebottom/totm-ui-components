@@ -1,7 +1,13 @@
 import { LinearGradient } from "@tamagui/linear-gradient"
-import { GetProps } from "tamagui"
+import { GetProps, Stack } from "tamagui"
 
 type BaseLinearGradientProps = GetProps<typeof LinearGradient>
+
+// Internal type for gradient direction points
+// Users can pass { x: number, y: number } or [number, number] directly
+type LinearGradientPoint =
+  | { x: number; y: number }
+  | [x: number, y: number]
 
 // Helper type: if colors is provided, locations must be provided (and vice versa)
 type GradientColorProps =
@@ -41,10 +47,19 @@ type GradientColorProps =
  * - Limit gradient complexity (3-4 colors max recommended)
  * 
  * @example
- * Basic gradient background with defaults:
+ * Basic gradient background:
  * ```tsx
- * <Gradient style={{ padding: 20, borderRadius: 12 }}>
- *   <Text style={{ color: 'white' }}>Content with gradient background</Text>
+ * <Gradient p="$4" rounded="$4" items="center" justify="center">
+ *   <Text color="white">Content with gradient background</Text>
+ * </Gradient>
+ * ```
+ * 
+ * @example
+ * Header layout with gradient:
+ * ```tsx
+ * <Gradient p="$4" flexDirection="row" justify="space-between" items="center">
+ *   <Text color="white" fontSize="$8" fontWeight="bold">TOTM</Text>
+ *   <Button variant="secondary">Sign Out</Button>
  * </Gradient>
  * ```
  * 
@@ -56,32 +71,30 @@ type GradientColorProps =
  *   locations={[0, 1]}
  *   start={[0, 0]}
  *   end={[1, 1]}
- *   style={{ padding: 24, borderRadius: 16 }}
+ *   p="$6"
+ *   rounded="$4"
+ *   items="center"
+ *   justify="center"
  * >
- *   <Text style={{ color: 'white', fontSize: 24 }}>
- *     Diagonal gradient
- *   </Text>
- * </Gradient>
- * ```
- * 
- * @example
- * Vertical gradient (top to bottom):
- * ```tsx
- * <Gradient
- *   colors={['$red10', '$orange10', '$yellow10']}
- *   locations={[0, 0.5, 1]}
- *   start={[0, 0]}
- *   end={[0, 1]}
- *   style={{ height: 200, padding: 16 }}
- * >
- *   <Text style={{ color: 'white' }}>Sunset gradient</Text>
+ *   <Text color="white" fontSize="$6">Diagonal gradient</Text>
  * </Gradient>
  * ```
  */
-export type GradientProps = Omit<BaseLinearGradientProps, 'colors' | 'locations'> & GradientColorProps
+export type GradientProps = Omit<BaseLinearGradientProps, 'colors' | 'locations' | 'start' | 'end'> & GradientColorProps & {
+  start?: LinearGradientPoint | null
+  end?: LinearGradientPoint | null
+}
 
-export const Gradient = ({ colors = ["$purple11", "$pink7", "$red7"], start = [0, 1], end = [1, 0], locations = [0, 0.5, 1], ...props }: GradientProps) => {
+export const Gradient = ({ colors = ["$purple11", "$pink7", "$red7"], start = [0, 1], end = [1, 0], locations = [0, 0.5, 1], children, ...props }: GradientProps) => {
   return (
-    <LinearGradient colors={colors} start={start} end={end} locations={locations} {...props} />
+    <LinearGradient
+      colors={colors}
+      start={start}
+      end={end}
+      locations={locations}
+      {...props}
+    >
+      {children}
+    </LinearGradient>
   )
 }

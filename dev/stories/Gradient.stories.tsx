@@ -1,15 +1,14 @@
+import { Box, Gradient, Text } from '@puzzlebottom/totm-ui-components';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Gradient } from '@puzzlebottom/totm-ui-components';
-import { View, Text } from 'react-native';
 
 const meta: Meta<typeof Gradient> = {
   title: 'Components/Gradient',
   component: Gradient,
   decorators: [
     (Story) => (
-      <View style={{ flex: 1, alignItems: 'flex-start', padding: 20, gap: 10 }}>
+      <Box flex={1} justify="flex-start" p={20} gap={10}>
         <Story />
-      </View>
+      </Box>
     ),
   ],
   tags: ['autodocs'],
