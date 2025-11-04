@@ -237,7 +237,7 @@ export const WithActions: Story = {
           items="center"
           pressStyle={{ opacity: 0.8 }}
         >
-          <Text color="white" fontWeight="bold">Edit</Text>
+          <Text color="white" fontWeight="bold" numberOfLines={1}>Edit</Text>
         </Box>
         <Box
           flex={1}
@@ -247,7 +247,7 @@ export const WithActions: Story = {
           items="center"
           pressStyle={{ opacity: 0.8 }}
         >
-          <Text fontWeight="bold">Delete</Text>
+          <Text fontWeight="bold" numberOfLines={1}>Delete</Text>
         </Box>
       </Box>
     </Card>
