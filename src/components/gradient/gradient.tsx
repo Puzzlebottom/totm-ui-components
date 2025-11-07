@@ -1,100 +1,148 @@
-import { LinearGradient } from "@tamagui/linear-gradient"
-import { GetProps, Stack } from "tamagui"
+import { GetProps, Stack, useTheme } from "tamagui"
+import { useMemo } from "react"
+import { angleToGradientPoints, type LinearGradientPoint } from "./gradient-utils"
+import {
+  useGradientAnimation,
+  useGradientDimensions,
+  usePrefersReducedMotion,
+} from "./gradient-hooks"
+import {
+  calculateStretchRatio,
+  createCSSGradient,
+  pointsToCSSAngle,
+  resolveGradientColor,
+} from "./gradient-web-utils"
 
-type BaseLinearGradientProps = GetProps<typeof LinearGradient>
-
-// Internal type for gradient direction points
-// Users can pass { x: number, y: number } or [number, number] directly
-type LinearGradientPoint =
-  | { x: number; y: number }
-  | [x: number, y: number]
+type BaseStackProps = GetProps<typeof Stack>
 
 // Helper type: if colors is provided, locations must be provided (and vice versa)
 type GradientColorProps =
-  | { colors?: never; locations?: never } // Neither provided - use defaults
-  | { colors: BaseLinearGradientProps['colors']; locations: BaseLinearGradientProps['locations'] } // Both provided
+  | { colors?: never; locations?: never }
+  | { colors: string[]; locations: number[] }
 
 /**
- * Gradient creates a linear gradient background using Tamagui's LinearGradient.
+ * Gradient creates a linear gradient background using pure CSS on web.
  * 
  * @remarks
- * Use Gradient as a versatile background layer for containers, cards, or buttons.
- * This is a lower-level primitive component - consider using GradientText or
- * GradientBorderView for specific use cases with better ergonomics.
- * 
- * **When to use:**
- * - Custom gradient backgrounds for containers or cards
- * - Button backgrounds with dynamic gradient colors
- * - Hero sections or featured content backgrounds
- * - Creating custom gradient-based components
- * - When you need full control over gradient properties
- * 
- * **When NOT to use:**
- * - Text gradients - use `GradientText` for better text handling
- * - Border gradients - use `GradientBorderView` for proper border effects
- * - Repeated backgrounds in lists - use solid colors for performance
- * - Subtle backgrounds - gradients draw attention, use sparingly
- * 
- * **Accessibility:**
- * - Ensure sufficient contrast between gradient and overlaid text
- * - Test text readability at all gradient color stops
- * - Darker gradients work better with light text
- * - Lighter gradients work better with dark text
- * 
- * **Performance note:**
- * - Gradients have rendering cost compared to solid colors
- * - Use solid backgrounds for list items or frequently repeated elements
- * - Limit gradient complexity (3-4 colors max recommended)
- * 
- * @example
- * Basic gradient background:
- * ```tsx
- * <Gradient p="$4" rounded="$4" items="center" justify="center">
- *   <Text color="white">Content with gradient background</Text>
- * </Gradient>
- * ```
- * 
- * @example
- * Header layout with gradient:
- * ```tsx
- * <Gradient p="$4" flexDirection="row" justify="space-between" items="center">
- *   <Text color="white" fontSize="$8" fontWeight="bold">TOTM</Text>
- *   <Button variant="secondary">Sign Out</Button>
- * </Gradient>
- * ```
- * 
- * @example
- * Custom colors and direction:
- * ```tsx
- * <Gradient
- *   colors={['$blue10', '$purple10']}
- *   locations={[0, 1]}
- *   start={[0, 0]}
- *   end={[1, 1]}
- *   p="$6"
- *   rounded="$4"
- *   items="center"
- *   justify="center"
- * >
- *   <Text color="white" fontSize="$6">Diagonal gradient</Text>
- * </Gradient>
- * ```
+ * This is the web implementation that matches the native version's behavior.
+ * It uses CSS linear-gradient with the same start/end point calculations.
  */
-export type GradientProps = Omit<BaseLinearGradientProps, 'colors' | 'locations' | 'start' | 'end'> & GradientColorProps & {
-  start?: LinearGradientPoint | null
-  end?: LinearGradientPoint | null
-}
+export type GradientProps = Omit<BaseStackProps, 'colors' | 'locations' | 'start' | 'end'> &
+  GradientColorProps & {
+    start?: LinearGradientPoint | null
+    end?: LinearGradientPoint | null
+    animated?: boolean
+    rotationDuration?: number
+    initialAngle?: number
+  }
 
-export const Gradient = ({ colors = ["$purple11", "$pink7", "$red7"], start = [0, 1], end = [1, 0], locations = [0, 0.5, 1], children, ...props }: GradientProps) => {
+export const Gradient = ({
+  colors = ["$purple11", "$pink7", "$red7"],
+  start: propStart,
+  end: propEnd,
+  locations = [0, 0.5, 1],
+  animated = false,
+  rotationDuration = 5,
+  initialAngle = 0,
+  children,
+  ...props
+}: GradientProps) => {
+  const theme = useTheme()
+
+  // Use shared hooks for common functionality
+  const [dimensions, handleLayout] = useGradientDimensions(
+    animated,
+    typeof props.width === 'number' ? props.width : undefined,
+    typeof props.height === 'number' ? props.height : undefined
+  )
+  const prefersReducedMotionRef = usePrefersReducedMotion()
+  const angle = useGradientAnimation(
+    animated,
+    rotationDuration,
+    initialAngle,
+    dimensions,
+    prefersReducedMotionRef.current
+  )
+
+  // Resolve color tokens to actual values
+  const resolvedColors = useMemo(() => {
+    const resolved = (colors || []).map((color) =>
+      resolveGradientColor(color, theme)
+    )
+
+    if (resolved.length === 0) {
+      console.warn('Gradient: No colors provided, using fallback')
+      return ['#000000', '#ffffff']
+    }
+
+    return resolved
+  }, [colors, theme])
+
+  // Calculate gradient points from angle (when animated) or use provided points
+  const gradientPoints = useMemo(() => {
+    if (animated) {
+      return angleToGradientPoints(angle, dimensions?.width, dimensions?.height)
+    }
+    return null
+  }, [animated, angle, dimensions])
+
+  // Determine start and end points
+  const start: [number, number] = useMemo(() => {
+    if (animated && gradientPoints) {
+      return gradientPoints.start
+    }
+    if (propStart) {
+      return Array.isArray(propStart) ? propStart : [propStart.x, propStart.y]
+    }
+    return [0, 1]
+  }, [animated, gradientPoints, propStart])
+
+  const end: [number, number] = useMemo(() => {
+    if (animated && gradientPoints) {
+      return gradientPoints.end
+    }
+    if (propEnd) {
+      return Array.isArray(propEnd) ? propEnd : [propEnd.x, propEnd.y]
+    }
+    return [1, 0]
+  }, [animated, gradientPoints, propEnd])
+
+  // Calculate CSS gradient with adjusted color stops for consistent blended area
+  const cssGradient = useMemo(() => {
+    if (!resolvedColors || resolvedColors.length === 0) {
+      console.warn('Gradient: No resolved colors available')
+      return 'linear-gradient(45deg, #000000, #ffffff)'
+    }
+
+    // Convert start/end points to CSS angle
+    let cssAngle = 45 // fallback
+    if (dimensions?.width && dimensions?.height) {
+      cssAngle = pointsToCSSAngle(start, end, dimensions.width, dimensions.height)
+    } else if (animated) {
+      cssAngle = angle
+    }
+
+    // Calculate stretch ratio to maintain consistent blended area width
+    const stretchRatio = dimensions
+      ? calculateStretchRatio(start, end, dimensions)
+      : 1
+
+    return createCSSGradient(cssAngle, resolvedColors, locations, stretchRatio)
+  }, [start, end, dimensions, resolvedColors, locations, animated, angle])
+
   return (
-    <LinearGradient
-      colors={colors}
-      start={start}
-      end={end}
-      locations={locations}
+    <Stack
       {...props}
+      onLayout={handleLayout}
+      style={[
+        props.style,
+        {
+          // @ts-ignore - backgroundImage is a valid web CSS property
+          backgroundImage: cssGradient,
+        } as any,
+      ]}
     >
       {children}
-    </LinearGradient>
+    </Stack>
   )
 }
