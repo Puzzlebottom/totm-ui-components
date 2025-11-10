@@ -97,6 +97,10 @@ const customTokens = createTokens({
 const config = createTamagui({
   ...defaultConfig,
   tokens: customTokens,
+  media: {
+    ...defaultConfig.media,
+    reduceMotion: { prefersReducedMotion: 'reduce' },
+  },
 })
 
 export type Conf = typeof config

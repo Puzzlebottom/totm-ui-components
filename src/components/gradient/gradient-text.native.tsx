@@ -12,16 +12,16 @@ type GradientTextColorProps =
   | { colors: BaseLinearGradientProps['colors']; locations: BaseLinearGradientProps['locations'] } // Both provided
 
 export type GradientTextProps = TextProps & {
-  start?: GradientProps['start'];
-  end?: GradientProps['end'];
+  gradientStart?: GradientProps['start'];
+  gradientEnd?: GradientProps['end'];
 } & GradientTextColorProps;
 
-export const GradientText = ({ children, colors, start, end, locations, ...props }: GradientTextProps) => {
+export const GradientText = ({ children, colors, gradientStart, gradientEnd, locations, ...props }: GradientTextProps) => {
   // Build gradient props object, type assertion is safe because GradientTextProps enforces the constraint
   const gradientProps = {
     ...(colors !== undefined && locations !== undefined ? { colors, locations } : {}),
-    ...(start !== undefined ? { start } : {}),
-    ...(end !== undefined ? { end } : {}),
+    ...(gradientStart !== undefined ? { start: gradientStart } : {}),
+    ...(gradientEnd !== undefined ? { end: gradientEnd } : {}),
   } as GradientProps;
 
   return (

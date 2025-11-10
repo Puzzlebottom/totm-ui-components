@@ -1,12 +1,12 @@
 import { LinearGradient } from "@tamagui/linear-gradient"
 import { GetProps } from "tamagui"
 import { useMemo } from "react"
-import { angleToGradientPoints, type LinearGradientPoint } from "./gradient-utils"
+import { angleToGradientPoints, type LinearGradientPoint } from "./utils/gradient-utils"
 import {
   useGradientAnimation,
   useGradientDimensions,
   usePrefersReducedMotion,
-} from "./gradient-hooks"
+} from "./hooks/gradient-hooks"
 
 type BaseLinearGradientProps = GetProps<typeof LinearGradient>
 
@@ -139,37 +139,34 @@ export const Gradient = ({
     typeof props.width === 'number' ? props.width : undefined,
     typeof props.height === 'number' ? props.height : undefined
   )
-  const prefersReducedMotionRef = usePrefersReducedMotion()
+  const prefersReducedMotion = usePrefersReducedMotion()
   const angle = useGradientAnimation(
     animated,
     rotationDuration,
     initialAngle,
     dimensions,
-    prefersReducedMotionRef.current
+    prefersReducedMotion
   )
 
-  // Calculate gradient points from angle (when animated) or use provided points
-  const gradientPoints = useMemo(() => {
-    if (animated) {
-      return angleToGradientPoints(angle, dimensions?.width, dimensions?.height)
-    }
-    return null
-  }, [animated, angle, dimensions])
-
   // Determine start and end points
-  const start: LinearGradientPoint = useMemo(() => {
-    if (animated && gradientPoints) {
-      return gradientPoints.start
+  // When animated: convert angle to points (with aspect ratio normalization)
+  // When not animated: use provided points or defaults
+  const { start, end } = useMemo(() => {
+    if (animated && dimensions?.width && dimensions?.height) {
+      const points = angleToGradientPoints(angle, dimensions.width, dimensions.height)
+      return { start: points.start, end: points.end }
     }
-    return propStart ?? [0, 1]
-  }, [animated, gradientPoints, propStart])
 
-  const end: LinearGradientPoint = useMemo(() => {
-    if (animated && gradientPoints) {
-      return gradientPoints.end
-    }
-    return propEnd ?? [1, 0]
-  }, [animated, gradientPoints, propEnd])
+    const startPoint: LinearGradientPoint = propStart
+      ? (Array.isArray(propStart) ? propStart : [propStart.x, propStart.y])
+      : [0, 1]
+
+    const endPoint: LinearGradientPoint = propEnd
+      ? (Array.isArray(propEnd) ? propEnd : [propEnd.x, propEnd.y])
+      : [1, 0]
+
+    return { start: startPoint, end: endPoint }
+  }, [animated, angle, dimensions, propStart, propEnd])
 
   return (
     <LinearGradient

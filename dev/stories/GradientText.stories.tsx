@@ -44,7 +44,7 @@ export const Customized: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Custom gradient colors and direction. Use `start` and `end` as objects `{ x, y }` or arrays `[x, y]` where values range from 0 to 1.',
+        story: 'Custom gradient colors and direction. Use `gradientStart` and `gradientEnd` as objects `{ x, y }` or arrays `[x, y]` where values range from 0 to 1.',
       },
     },
   },

@@ -2,91 +2,52 @@
  * Web-specific utilities for Gradient component
  */
 
-import type { GradientDimensions } from './gradient-hooks'
+import type { GradientDimensions } from '../hooks/gradient-hooks'
 
 /**
- * Converts normalized start/end points to CSS angle for linear-gradient.
+ * Calculates both CSS angle and stretch ratio from gradient points in a single pass.
  * 
- * CSS linear-gradient uses an angle in degrees where:
- * - 0deg = upward (to top)
- * - 90deg = rightward (to right)
- * - 180deg = downward (to bottom)
- * - 270deg = leftward (to left)
- */
-export function pointsToCSSAngle(
-  start: [number, number],
-  end: [number, number],
-  width: number,
-  height: number
-): number {
-  // Convert normalized coordinates to pixel coordinates
-  const startX = start[0] * width
-  const startY = start[1] * height
-  const endX = end[0] * width
-  const endY = end[1] * height
-
-  // Calculate direction vector
-  const dx = endX - startX
-  const dy = endY - startY
-
-  // Convert to CSS angle (CSS uses different convention than our angle system)
-  const angleRad = Math.atan2(-dy, dx)
-  const angleDeg = (angleRad * 180) / Math.PI
-  const cssAngle = 90 - angleDeg
-
-  return cssAngle
-}
-
-/**
- * Calculates the stretch ratio needed to maintain consistent blended area width.
- * 
- * CSS linear-gradient always uses the full diagonal (hypotenuse) as its gradient line.
- * To keep the visual blended area width constant as the gradient rotates, we need
- * to stretch the color stops based on the perpendicular distance.
- * 
- * The blended area width is inversely proportional to the perpendicular distance:
- * - When perpendicular distance is large → blended area is wide → less stretch needed
- * - When perpendicular distance is small → blended area is narrow → more stretch needed
+ * This avoids redundant calculations since both need the same direction vector.
  * 
  * @param start - Normalized start point [x, y]
  * @param end - Normalized end point [x, y]
  * @param dimensions - Component dimensions
- * @returns Stretch ratio (>= 1, typically 1.0 to 2.0)
+ * @returns Object with cssAngle and stretchRatio
  */
-export function calculateStretchRatio(
+export function calculateGradientProperties(
   start: [number, number],
   end: [number, number],
   dimensions: GradientDimensions
-): number {
+): { cssAngle: number; stretchRatio: number } {
   const { width, height } = dimensions
 
-  // Convert normalized points to pixel coordinates
+  // Convert normalized coordinates to pixel coordinates (done once)
   const startX = start[0] * width
   const startY = start[1] * height
   const endX = end[0] * width
   const endY = end[1] * height
 
-  // Calculate gradient line angle
+  // Calculate direction vector (used for both angle and stretch ratio)
   const dx = endX - startX
   const dy = endY - startY
   const angleRad = Math.atan2(-dy, dx)
 
-  // Calculate perpendicular distance: the distance across the component
-  // perpendicular to the gradient line
+  // Convert to CSS angle (CSS uses different convention: 0deg = upward)
+  const angleDeg = (angleRad * 180) / Math.PI
+  const cssAngle = 90 - angleDeg
+
+  // Calculate stretch ratio to maintain consistent blended area width
+  // The perpendicular to the gradient line is rotated 90°
   const perpAngleRad = angleRad + Math.PI / 2
   const perpCos = Math.abs(Math.cos(perpAngleRad))
   const perpSin = Math.abs(Math.sin(perpAngleRad))
   const perpendicularDistance = width * perpSin + height * perpCos
 
-  // Target length is the hypotenuse (longest possible line in the rectangle)
-  // This is what CSS linear-gradient uses as its gradient line length
+  // Target length is the hypotenuse (what CSS linear-gradient uses)
   const targetLength = Math.sqrt(width * width + height * height)
+  const stretchRatio = targetLength / perpendicularDistance
 
-  // Stretch ratio to keep blended width constant at the hypotenuse level
-  // The blended area width should be proportional to targetLength, not perpendicularDistance
-  // To achieve this: stretchRatio = targetLength / perpendicularDistance
-  // This ensures the blended width is constant and matches the hypotenuse scale
-  return targetLength / perpendicularDistance
+  return { cssAngle, stretchRatio }
 }
 
 /**

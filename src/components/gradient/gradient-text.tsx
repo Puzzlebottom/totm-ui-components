@@ -2,6 +2,8 @@ import { Text, useTheme, GetProps } from "tamagui";
 import type { TextProps } from "tamagui";
 import { type GradientProps } from "./gradient";
 import { LinearGradient } from "@tamagui/linear-gradient";
+import { resolveGradientColor } from "./utils/gradient-web-utils";
+import { useMemo } from "react";
 
 type BaseLinearGradientProps = GetProps<typeof LinearGradient>
 
@@ -69,8 +71,8 @@ type GradientTextColorProps =
  * Vertical gradient (top to bottom):
  * ```tsx
  * <GradientText
- *   start={[0, 0]}
- *   end={[0, 1]}
+ *   gradientStart={[0, 0]}
+ *   gradientEnd={[0, 1]}
  *   style={{ fontSize: 36 }}
  * >
  *   New Release
@@ -97,38 +99,42 @@ export type GradientTextProps = TextProps & {
 export const GradientText = ({ children, colors, gradientStart, gradientEnd, locations, style, ...props }: GradientTextProps) => {
   const theme = useTheme();
 
-  // Resolve color tokens to actual values
-  const resolveColor = (color: string) => {
-    if (color.startsWith('$')) {
-      const tokenName = color.slice(1);
-      return theme[tokenName]?.get() || color;
-    }
-    return color;
-  };
-
-  // Use Gradient defaults if not provided
+  // Use Gradient defaults if not provided (matching native behavior)
   const resolvedColors = colors || ['$purple11', '$pink7', '$red7'];
   const resolvedStart = gradientStart || [0, 1];
   const resolvedEnd = gradientEnd || [1, 0];
   const resolvedLocations = locations || [0, 0.5, 1];
 
-  const gradientColors = resolvedColors.map(resolveColor);
+  // Resolve color tokens to actual values using shared utility
+  const gradientColors = useMemo(
+    () => resolvedColors.map((color) => resolveGradientColor(color, theme)),
+    [resolvedColors, theme]
+  );
 
   // Calculate gradient angle from start and end coordinates
   // React Native uses coordinates where [0,0] is top-left, [1,1] is bottom-right
   // CSS linear-gradient uses angles clockwise from north (0deg = up, 90deg = right)
-  const startArray = Array.isArray(resolvedStart) ? resolvedStart : [resolvedStart.x || 0, resolvedStart.y || 0];
-  const endArray = Array.isArray(resolvedEnd) ? resolvedEnd : [resolvedEnd.x || 0, resolvedEnd.y || 0];
-  const dx = (endArray[0] - startArray[0]);
-  const dy = (endArray[1] - startArray[1]);
-  // Convert from atan2 (counter-clockwise from east) to CSS (clockwise from north)
-  const angle = 90 - (Math.atan2(-dy, dx) * (180 / Math.PI));
+  const angle = useMemo(() => {
+    const startArray = Array.isArray(resolvedStart) ? resolvedStart : [resolvedStart.x || 0, resolvedStart.y || 0];
+    const endArray = Array.isArray(resolvedEnd) ? resolvedEnd : [resolvedEnd.x || 0, resolvedEnd.y || 0];
+    const dx = endArray[0] - startArray[0];
+    const dy = endArray[1] - startArray[1];
+    // Convert from atan2 (counter-clockwise from east) to CSS (clockwise from north)
+    return 90 - (Math.atan2(-dy, dx) * (180 / Math.PI));
+  }, [resolvedStart, resolvedEnd]);
 
   // Build gradient with color stops
-  const colorStops = gradientColors.map((color, i) => {
-    const location = resolvedLocations[i] !== undefined ? resolvedLocations[i] * 100 : (i / (gradientColors.length - 1)) * 100;
-    return `${color} ${location}%`;
-  }).join(', ');
+  const colorStops = useMemo(() => {
+    return gradientColors
+      .map((color, i) => {
+        const location =
+          resolvedLocations[i] !== undefined
+            ? resolvedLocations[i] * 100
+            : (i / (gradientColors.length - 1)) * 100;
+        return `${color} ${location}%`;
+      })
+      .join(', ');
+  }, [gradientColors, resolvedLocations]);
 
   return (
     <Text
@@ -141,7 +147,7 @@ export const GradientText = ({ children, colors, gradientStart, gradientEnd, loc
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
-        } as any, // Cast to any for web-only CSS properties
+        }
       ]}
     >
       {children}

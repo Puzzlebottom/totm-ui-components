@@ -3,7 +3,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react'
-import { calculateVisualSpeedMultiplier } from './gradient-utils'
+import { calculateVisualSpeedMultiplier } from '../utils/gradient-utils'
+import { useMedia } from 'tamagui'
 
 export interface GradientDimensions {
   width: number
@@ -56,34 +57,17 @@ export function useGradientDimensions(
 }
 
 /**
- * Hook to check for prefers-reduced-motion preference.
+ * Hook to check for prefers-reduced-motion preference using Tamagui's media system.
  * 
- * Returns a ref that tracks the current preference. On React Native,
- * this will be null and animation will proceed normally.
+ * Returns a boolean indicating if reduced motion is preferred.
+ * On React Native, this will be false and animation will proceed normally.
+ * 
+ * Uses Tamagui's built-in `useMedia` hook which automatically handles
+ * the `reduceMotion` media query defined in the Tamagui config.
  */
-export function usePrefersReducedMotion(): React.MutableRefObject<boolean | null> {
-  const prefersReducedMotionRef = useRef<boolean | null>(null)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      try {
-        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-        prefersReducedMotionRef.current = mediaQuery.matches
-
-        // Listen for changes (good for accessibility)
-        const handleChange = (e: MediaQueryListEvent) => {
-          prefersReducedMotionRef.current = e.matches
-        }
-        mediaQuery.addEventListener('change', handleChange)
-        return () => mediaQuery.removeEventListener('change', handleChange)
-      } catch {
-        // Fallback if matchMedia is not supported
-        prefersReducedMotionRef.current = false
-      }
-    }
-  }, [])
-
-  return prefersReducedMotionRef
+export function usePrefersReducedMotion(): boolean {
+  const media = useMedia()
+  return media.reduceMotion ?? false
 }
 
 /**
@@ -97,7 +81,7 @@ export function useGradientAnimation(
   rotationDuration: number,
   initialAngle: number,
   dimensions: GradientDimensions | null,
-  prefersReducedMotion: boolean | null
+  prefersReducedMotion: boolean
 ): number {
   const [angle, setAngle] = useState(initialAngle)
   const animationFrameRef = useRef<number | null>(null)
@@ -167,4 +151,5 @@ export function useGradientAnimation(
 
   return angle
 }
+
 

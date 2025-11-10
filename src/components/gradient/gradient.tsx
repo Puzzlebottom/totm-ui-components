@@ -1,17 +1,16 @@
 import { GetProps, Stack, useTheme } from "tamagui"
 import { useMemo } from "react"
-import { angleToGradientPoints, type LinearGradientPoint } from "./gradient-utils"
+import { angleToGradientPoints, type LinearGradientPoint } from "./utils/gradient-utils"
 import {
   useGradientAnimation,
   useGradientDimensions,
   usePrefersReducedMotion,
-} from "./gradient-hooks"
+} from "./hooks/gradient-hooks"
 import {
-  calculateStretchRatio,
+  calculateGradientProperties,
   createCSSGradient,
-  pointsToCSSAngle,
   resolveGradientColor,
-} from "./gradient-web-utils"
+} from "./utils/gradient-web-utils"
 
 type BaseStackProps = GetProps<typeof Stack>
 
@@ -55,13 +54,13 @@ export const Gradient = ({
     typeof props.width === 'number' ? props.width : undefined,
     typeof props.height === 'number' ? props.height : undefined
   )
-  const prefersReducedMotionRef = usePrefersReducedMotion()
+  const prefersReducedMotion = usePrefersReducedMotion()
   const angle = useGradientAnimation(
     animated,
     rotationDuration,
     initialAngle,
     dimensions,
-    prefersReducedMotionRef.current
+    prefersReducedMotion
   )
 
   // Resolve color tokens to actual values
@@ -78,34 +77,25 @@ export const Gradient = ({
     return resolved
   }, [colors, theme])
 
-  // Calculate gradient points from angle (when animated) or use provided points
-  const gradientPoints = useMemo(() => {
-    if (animated) {
-      return angleToGradientPoints(angle, dimensions?.width, dimensions?.height)
-    }
-    return null
-  }, [animated, angle, dimensions])
-
   // Determine start and end points
-  const start: [number, number] = useMemo(() => {
-    if (animated && gradientPoints) {
-      return gradientPoints.start
+  // When animated: convert angle to points (with aspect ratio normalization)
+  // When not animated: use provided points or defaults
+  const { start, end } = useMemo(() => {
+    if (animated && dimensions?.width && dimensions?.height) {
+      const points = angleToGradientPoints(angle, dimensions.width, dimensions.height)
+      return { start: points.start, end: points.end }
     }
-    if (propStart) {
-      return Array.isArray(propStart) ? propStart : [propStart.x, propStart.y]
-    }
-    return [0, 1]
-  }, [animated, gradientPoints, propStart])
 
-  const end: [number, number] = useMemo(() => {
-    if (animated && gradientPoints) {
-      return gradientPoints.end
-    }
-    if (propEnd) {
-      return Array.isArray(propEnd) ? propEnd : [propEnd.x, propEnd.y]
-    }
-    return [1, 0]
-  }, [animated, gradientPoints, propEnd])
+    const startPoint: [number, number] = propStart
+      ? Array.isArray(propStart) ? propStart : [propStart.x, propStart.y]
+      : [0, 1]
+
+    const endPoint: [number, number] = propEnd
+      ? Array.isArray(propEnd) ? propEnd : [propEnd.x, propEnd.y]
+      : [1, 0]
+
+    return { start: startPoint, end: endPoint }
+  }, [animated, angle, dimensions, propStart, propEnd])
 
   // Calculate CSS gradient with adjusted color stops for consistent blended area
   const cssGradient = useMemo(() => {
@@ -114,21 +104,17 @@ export const Gradient = ({
       return 'linear-gradient(45deg, #000000, #ffffff)'
     }
 
-    // Convert start/end points to CSS angle
+    // Calculate both CSS angle and stretch ratio in one pass (avoids redundant calculations)
     let cssAngle = 45 // fallback
+    let stretchRatio = 1
     if (dimensions?.width && dimensions?.height) {
-      cssAngle = pointsToCSSAngle(start, end, dimensions.width, dimensions.height)
-    } else if (animated) {
-      cssAngle = angle
+      const props = calculateGradientProperties(start, end, dimensions)
+      cssAngle = props.cssAngle
+      stretchRatio = props.stretchRatio
     }
 
-    // Calculate stretch ratio to maintain consistent blended area width
-    const stretchRatio = dimensions
-      ? calculateStretchRatio(start, end, dimensions)
-      : 1
-
     return createCSSGradient(cssAngle, resolvedColors, locations, stretchRatio)
-  }, [start, end, dimensions, resolvedColors, locations, animated, angle])
+  }, [start, end, dimensions, resolvedColors, locations])
 
   return (
     <Stack
